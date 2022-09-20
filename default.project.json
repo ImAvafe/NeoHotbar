@@ -1,0 +1,15 @@
+{
+  "name": "NeoHotbar",
+  
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+    
+      "NeoHotbar": {
+        "$path": "src"
+      }
+      }
+  }
+}

@@ -1,0 +1,8 @@
+[package]
+name = "cyphical/neohotbar"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+fusion = "elttob/fusion@0.1.1-beta"

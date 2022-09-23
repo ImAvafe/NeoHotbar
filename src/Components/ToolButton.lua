@@ -13,7 +13,7 @@ local ToolImage = require(Components.ToolImage)
 
 return function(Props)
 	local ToolPreview = Computed(function()
-		if Props.Tool.TextureId then
+		if Props.Tool.TextureId ~= "" then
 			return ToolImage {
 				Tool = Props.Tool
 			}

@@ -5,4 +5,4 @@ local BundledPackages = script:GetChildren()
 
 assert(BundledPackages or WallyPackages, "NeoBar is improperly installed. Missing dependencies.")
 
-return #BundledPackages > 0 and BundledPackages or WallyPackages
+return (#BundledPackages > 0 and BundledPackages) or WallyPackages

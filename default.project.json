@@ -9,7 +9,11 @@
     
       "NeoHotbar": {
         "$path": "src"
+      },
+
+      "Packages": {
+        "$path": "Packages"
       }
-      }
+    }
   }
 }

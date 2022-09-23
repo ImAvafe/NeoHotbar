@@ -4,19 +4,25 @@ local Components = script.Parent
 
 local Fusion = require(Deps.fusion)
 
+local States = require(NeoHotbar.States)
+
 local New = Fusion.New
 local Children = Fusion.Children
-local State = Fusion.State
 local Computed = Fusion.Computed
 
-local Tool = require(Components.Tool)
+local ToolButton = require(Components.ToolButton)
 
 return function(Props)
 	local HotbarTools = Computed(function()
 		local Return = {}
-		table.insert(Return, Tool {
-			ToolNumber = 1
-		})
+		local ToolSlots = States.ToolSlots:get()
+		for ToolNum, ToolSlot in ipairs(ToolSlots) do
+			table.insert(Return, ToolButton {
+				Tool = ToolSlot.Tool,
+				ToolNumber = ToolNum,
+				Equipped = ToolSlot.Equipped,
+			})
+		end
 		return Return
 	end)
 

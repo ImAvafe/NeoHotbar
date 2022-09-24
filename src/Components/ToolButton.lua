@@ -1,12 +1,15 @@
 local NeoHotbar = script.Parent.Parent
-local Deps = require(NeoHotbar.Dependencies)
 local Components = NeoHotbar.Components
+
+local Deps = require(NeoHotbar.Dependencies)
+local Utils = require(NeoHotbar.Utils)
 
 local Fusion = require(Deps.fusion)
 
 local New = Fusion.New
 local Children = Fusion.Children
 local Computed = Fusion.Computed
+local OnEvent = Fusion.OnEvent
 
 local ToolName = require(Components.ToolName)
 local ToolImage = require(Components.ToolImage)
@@ -32,6 +35,10 @@ return function(Props)
 		Text = "",
 		AutoButtonColor = false,
 		LayoutOrder = Props.ToolNumber,
+
+		[OnEvent "Activated"] = function()
+			Utils:ToggleToolEquipped(Props.Tool)
+		end,
 		
 		[Children] = {
 			New "UICorner" {
@@ -43,7 +50,7 @@ return function(Props)
 				Enabled = Props.Equipped,
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				Color = Color3.fromRGB(214, 214, 214),
-				Thickness = 1.7,
+				Thickness = 1.85,
 			},
 
 			New "TextLabel" {

@@ -39,4 +39,13 @@ function NeoHotbar:Start()
     end)
 end
 
+function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
+   local CustomButtons = States.CustomButtons:get()
+   table.insert(CustomButtons, {
+		Icon = IconImage,
+		Callback = Callback,
+   })
+   States.CustomButtons:set(CustomButtons, true)
+end
+
 return NeoHotbar

@@ -95,6 +95,7 @@ end
 
 function States:Init()
     self.ToolSlots = State({})
+    self.CustomButtons = State({})
 end
 
 return States

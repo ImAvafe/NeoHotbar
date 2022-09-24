@@ -11,18 +11,18 @@ local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 
-local ToolName = require(Components.ToolName)
-local ToolImage = require(Components.ToolImage)
+local ButtonText = require(Components.ButtonText)
+local ButtonImage = require(Components.ButtonImage)
 
 return function(Props)
 	local ToolPreview = Computed(function()
 		if Props.Tool.TextureId ~= "" then
-			return ToolImage {
-				Tool = Props.Tool
+			return ButtonImage {
+				Image = Props.Tool.TextureId,
 			}
 		else
-			return ToolName {
-				Tool = Props.Tool
+			return ButtonText {
+				Text = Props.Tool.Name,
 			}
 		end
 	end)
@@ -34,7 +34,7 @@ return function(Props)
 		Size = UDim2.fromOffset(60, 60),
 		Text = "",
 		AutoButtonColor = false,
-		LayoutOrder = Props.ToolNumber,
+		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()
 			Utils:ToggleToolEquipped(Props.Tool)

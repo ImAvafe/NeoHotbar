@@ -7,8 +7,8 @@ local Children = Fusion.Children
 
 return function(Props)
 	return New "TextLabel" {
-		Name = "ToolName",
-		Text = Props.Tool.Name or "Tool",
+		Name = "ButtonText",
+		Text = Props.Text or "Text",
 		BackgroundTransparency = 1,
 		Size = UDim2.fromScale(1, 1),
 		TextSize = 14,

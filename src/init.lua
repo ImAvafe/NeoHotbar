@@ -5,6 +5,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local States = require(script.States)
 local Utils = require(script.Utils)
+local ThemeProvider = require(script.ThemeProvider)
 
 local HotbarGui = require(script.Components.Hotbar)
 
@@ -46,6 +47,10 @@ function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
 		Callback = Callback,
    })
    States.CustomButtons:set(CustomButtons, true)
+end
+
+function NeoHotbar:SetTheme(Theme: table)
+    ThemeProvider:SetTheme(Theme)
 end
 
 return NeoHotbar

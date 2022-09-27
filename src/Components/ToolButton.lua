@@ -3,6 +3,7 @@ local Components = NeoHotbar.Components
 
 local Deps = require(NeoHotbar.Dependencies)
 local Utils = require(NeoHotbar.Utils)
+local Theme = require(NeoHotbar.ThemeProvider).Theme
 
 local Fusion = require(Deps.fusion)
 
@@ -29,8 +30,8 @@ return function(Props)
 	
 	return New "TextButton" {
 		Name = "Tool",
-		BackgroundColor3 = Color3.fromRGB(31, 31, 31),
-		BackgroundTransparency = 0.3,
+		BackgroundColor3 = Theme.ToolButton.BackgroundColor3,
+		BackgroundTransparency = Theme.ToolButton.BackgroundTransparency,
 		Size = UDim2.fromOffset(60, 60),
 		Text = "",
 		AutoButtonColor = false,
@@ -43,14 +44,14 @@ return function(Props)
 		[Children] = {
 			New "UICorner" {
 				Name = "UICorner",
-				CornerRadius = UDim.new(0.1, 0),
+				CornerRadius = Theme.ToolButton.CornerRadius,
 			},
 			New "UIStroke" {
 				Name = "UIStroke",
 				Enabled = Props.Equipped,
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-				Color = Color3.fromRGB(214, 214, 214),
-				Thickness = 1.85,
+				Color = Theme.ToolButton.StrokeColor,
+				Thickness = Theme.ToolButton.StrokeThickness,
 			},
 
 			New "TextLabel" {
@@ -58,13 +59,9 @@ return function(Props)
 				Text = Props.ToolNumber,
 				BackgroundTransparency = 1,
 				Size = UDim2.fromOffset(17, 20),
-				TextColor3 = Color3.fromRGB(170, 170, 170),
-				TextSize = 13,
-				FontFace = Font.new(
-						"rbxasset://fonts/families/GothamSSm.json",
-						Enum.FontWeight.Medium,
-						Enum.FontStyle.Normal
-				),
+				TextColor3 = Theme.ToolNumber.TextColor3,
+				TextSize = Theme.ToolNumber.TextSize,
+				FontFace = Theme.ToolNumber.FontFace,
 			},
 
 			ToolPreview

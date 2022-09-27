@@ -1,6 +1,9 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local NeoHotbar = script.Parent.Parent
 
-local Fusion = require(ReplicatedStorage.Packages.fusion)
+local Deps = require(NeoHotbar.Dependencies)
+local Theme = require(NeoHotbar.ThemeProvider).Theme
+
+local Fusion = require(Deps.Fusion)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -9,11 +12,11 @@ return function(Props)
 	return New "TextLabel" {
 		Name = "ButtonText",
 		Text = Props.Text or "Text",
+		TextColor3 = Theme.ButtonText.TextColor3,
+		TextSize = Theme.ButtonText.TextSize,
+		FontFace = Theme.ButtonText.FontFace,
 		BackgroundTransparency = 1,
 		Size = UDim2.fromScale(1, 1),
-		TextSize = 14,
-		FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json"),
-		TextColor3 = Color3.fromRGB(255, 255, 255),
 		TextWrapped = true,
 	
 		[Children] = {

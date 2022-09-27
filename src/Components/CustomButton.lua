@@ -2,6 +2,7 @@ local NeoHotbar = script.Parent.Parent
 local Components = NeoHotbar.Components
 
 local Deps = require(NeoHotbar.Dependencies)
+local Theme = require(NeoHotbar.ThemeProvider).Theme
 
 local Fusion = require(Deps.fusion)
 
@@ -14,11 +15,10 @@ local ButtonImage = require(Components.ButtonImage)
 return function(Props)
 	return New "TextButton" {
 		Name = "CustomButton",
-		BackgroundColor3 = Color3.fromRGB(31, 31, 31),
-		BackgroundTransparency = 0.3,
+		BackgroundColor3 = Theme.CustomButton.BackgroundColor3,
+		BackgroundTransparency = Theme.CustomButton.BackgroundTransparency,
 		Size = UDim2.fromOffset(60, 60),
 		Text = "",
-		AutoButtonColor = false,
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = Props.Callback,
@@ -26,15 +26,14 @@ return function(Props)
 		[Children] = {
 			New "UICorner" {
 				Name = "UICorner",
-				CornerRadius = UDim.new(0.15, 0),
+				CornerRadius = Theme.CustomButton.CornerRadius,
 			},
 			New "UIStroke" {
 				Name = "UIStroke",
 				Enabled = true,
 				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-				Color = Color3.fromRGB(214, 214, 214),
-				Thickness = 1.85,
-                Transparency = 0.35,
+				Color = Theme.CustomButton.StrokeColor,
+				Thickness = Theme.CustomButton.StrokeThickness,
 			},
 
             ButtonImage {

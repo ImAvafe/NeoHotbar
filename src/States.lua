@@ -1,6 +1,3 @@
--- This script kinda sins against Fusion's reactivity, as well as having some general design flaws, but It Works™
--- If you have any suggestions, please voice them on Github at Cyphical/NeoHotbar or Twitter @Cyphical
-
 local Players = game:GetService("Players")
 local NeoHotbar = script.Parent
 local Deps = require(NeoHotbar.Dependencies)

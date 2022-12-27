@@ -1,6 +1,6 @@
 # NeoHotbar
 
-NeoHotbar is a sleek, modern hotbar for Roblox. Seamlessly integratable and customizable.
+NeoHotbar is a sleek, modern hotbar for Roblox. Seamlessly integratable and extensible.
 
 # Install
 

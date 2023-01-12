@@ -1,14 +1,13 @@
-local NeoHotbar = script.Parent.Parent
-local Deps = require(NeoHotbar.Dependencies)
-local Components = script.Parent
+local NeoHotbar = script:FindFirstAncestor("NeoHotbar")
 
-local Fusion = require(Deps.fusion)
-
-local States = require(NeoHotbar.States)
+local Fusion = require(NeoHotbar.ExtPackages.Fusion)
+local States = require(NeoHotbar.UI.States)
 
 local New = Fusion.New
-local Children = Fusion.Children
 local Computed = Fusion.Computed
+local Children = Fusion.Children
+
+local Components = NeoHotbar.UI.Components
 
 local ToolButton = require(Components.ToolButton)
 local CustomButton = require(Components.CustomButton)
@@ -44,27 +43,26 @@ return function(Props)
 	return New "ScreenGui" {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
-	
+
 		[Children] = {
 			New "Frame" {
-				Name = "Frame",
-				BackgroundTransparency = 1,
-				Position = UDim2.new(0.5, -327, 1, -70),
+				Name = "Hotbar",
+				AnchorPoint = Vector2.new(0.5, 0),
+				Position = UDim2.new(UDim.new(0.5, 0), UDim.new(1, -70)),
 				Size = UDim2.fromOffset(655, 70),
-	
+				BackgroundTransparency = 1,
+
 				[Children] = {
 					New "UIListLayout" {
-						Name = "UIListLayout",
 						Padding = UDim.new(0, 7),
 						FillDirection = Enum.FillDirection.Horizontal,
 						HorizontalAlignment = Enum.HorizontalAlignment.Center,
-						SortOrder = Enum.SortOrder.LayoutOrder,
 					},
 
-					HotbarCustomButtons,
 					HotbarTools,
+					HotbarCustomButtons,
 				}
-			},
+			}
 		}
 	}
 end

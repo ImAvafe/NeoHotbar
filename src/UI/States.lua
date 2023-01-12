@@ -1,10 +1,10 @@
 local Players = game:GetService("Players")
-local NeoHotbar = script.Parent
-local Deps = require(NeoHotbar.Dependencies)
 
-local Fusion = require(Deps.fusion)
+local NeoHotbar = script:FindFirstAncestor("NeoHotbar")
 
-local State = Fusion.State
+local Fusion = require(NeoHotbar.ExtPackages.Fusion)
+
+local Value = Fusion.Value
 
 local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 
@@ -91,8 +91,8 @@ function States:Start()
 end
 
 function States:Init()
-    self.ToolSlots = State({})
-    self.CustomButtons = State({})
+    self.ToolSlots = Value({})
+    self.CustomButtons = Value({})
 end
 
 return States

@@ -3,11 +3,10 @@ local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
 
-local States = require(script.States)
+local States = require(script.UI.States)
 local Utils = require(script.Utils)
-local ThemeProvider = require(script.ThemeProvider)
 
-local HotbarGui = require(script.Components.Hotbar)
+local HotbarGui = require(script.UI.Components.Hotbar)
 
 if not RunService:IsStudio() then
     print("NeoHotbar 0.1.0 by @Cyphical 🌟🛠")
@@ -47,10 +46,6 @@ function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
 		Callback = Callback,
    })
    States.CustomButtons:set(CustomButtons, true)
-end
-
-function NeoHotbar:SetTheme(Theme: table)
-    ThemeProvider:SetTheme(Theme)
 end
 
 return NeoHotbar

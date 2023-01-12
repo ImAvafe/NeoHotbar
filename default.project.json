@@ -8,11 +8,10 @@
       "$className": "ReplicatedStorage",
     
       "NeoHotbar": {
-        "$path": "src"
-      },
-
-      "Packages": {
-        "$path": "Packages"
+        "$path": "src",
+        "ExtPackages": {
+          "$path": "ExtPackages"
+        }
       }
     }
   }

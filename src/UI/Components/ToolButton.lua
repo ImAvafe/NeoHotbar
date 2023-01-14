@@ -10,7 +10,7 @@ local Hydrate = Fusion.Hydrate
 local WithChild = Fusion.WithChild
 
 local Components = NeoHotbar.UI.Components
-local Dehydrated = NeoHotbar.UI.Dehydrated
+local DehydratedComps = require(NeoHotbar.UI.DehydratedComps)
 
 local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
@@ -28,7 +28,7 @@ return function(Props)
 		end
 	end)
 	
-	return Hydrate(Dehydrated.ToolButton:Clone()) {
+	return Hydrate(DehydratedComps:Get().ToolButton:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()
@@ -38,49 +38,13 @@ return function(Props)
 		[WithChild "UIStroke"] = {
 			Enabled = Props.Equipped
 		},
+		[WithChild "ToolNumber"] = {
+			Text = Props.ToolNumber,
+			Font = Enum.Font.Gotham,
+		},
 
 		[Children] = {
 			ToolPreview
 		}
 	}
-
-	-- return New "TextButton" {
-	-- 	Name = "Tool",
-	-- 	BackgroundColor3 = Theme.ToolButton.BackgroundColor3,
-	-- 	BackgroundTransparency = Theme.ToolButton.BackgroundTransparency,
-	-- 	Size = UDim2.fromOffset(60, 60),
-	-- 	Text = "",
-	-- 	AutoButtonColor = false,
-	-- 	LayoutOrder = Props.LayoutOrder,
-
-	-- 	[OnEvent "Activated"] = function()
-	-- 		Utils:ToggleToolEquipped(Props.Tool)
-	-- 	end,
-		
-	-- 	[Children] = {
-	-- 		New "UICorner" {
-	-- 			Name = "UICorner",
-	-- 			CornerRadius = Theme.ToolButton.CornerRadius,
-	-- 		},
-	-- 		New "UIStroke" {
-	-- 			Name = "UIStroke",
-	-- 			Enabled = Props.Equipped,
-	-- 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-	-- 			Color = Theme.ToolButton.StrokeColor,
-	-- 			Thickness = Theme.ToolButton.StrokeThickness,
-	-- 		},
-
-	-- 		New "TextLabel" {
-	-- 			Name = "ToolNumber",
-	-- 			Text = Props.ToolNumber,
-	-- 			BackgroundTransparency = 1,
-	-- 			Size = UDim2.fromOffset(17, 20),
-	-- 			TextColor3 = Theme.ToolNumber.TextColor3,
-	-- 			TextSize = Theme.ToolNumber.TextSize,
-	-- 			FontFace = Theme.ToolNumber.FontFace,
-	-- 		},
-
-	-- 		ToolPreview
-	-- 	}
-	-- }
 end

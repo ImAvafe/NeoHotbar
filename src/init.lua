@@ -2,32 +2,32 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
+local VRService = game:GetService("VRService")
 
 local States = require(script.UI.States)
 local Utils = require(script.Utils)
+local DehydratedComps = require(script.UI.DehydratedComps)
 
 local HotbarGui = require(script.UI.Components.Hotbar)
 
 if not RunService:IsStudio() then
-    print("NeoHotbar 0.1.0 by @Cyphical 🌟🛠")
+    print("NeoHotbar 0.1.0 by Avafe 🌟🛠")
 end
 
 local NeoHotbar = {}
 
 function NeoHotbar:Start()
-    if self.Started then
-        warn("NeoHotbar has already been started. It cannot be started again.")
-    end
-    self.Started = true
+    assert(not self._Started, "NeoHotbar has already been started. It cannot be started again.")
+    self._Started = true
 
     States:Init()
     States:Start()
 
-    HotbarGui {
-        Parent = Players.LocalPlayer.PlayerGui
-    }
+    self:_CreateGui()
 
-    StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+    if not VRService.VREnabled then -- Don't disable default backpack on VR
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+    end
 
     UserInputService.InputBegan:Connect(function(Input)
         local ToolSlots = States.ToolSlots:get()
@@ -39,6 +39,13 @@ function NeoHotbar:Start()
     end)
 end
 
+function NeoHotbar:UpdateGuiSet(CustomGuiSet: ScreenGui)
+    assert(self._Started, "NeoHotbar needs to have been started to reload its GUI.")
+    DehydratedComps:Overwrite(CustomGuiSet)
+    self._HotbarGui:Destroy()
+    self:_CreateGui()
+end
+
 function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
    local CustomButtons = States.CustomButtons:get()
    table.insert(CustomButtons, {
@@ -46,6 +53,12 @@ function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
 		Callback = Callback,
    })
    States.CustomButtons:set(CustomButtons, true)
+end
+
+function NeoHotbar:_CreateGui()
+    self._HotbarGui = HotbarGui {
+        Parent = Players.LocalPlayer.PlayerGui
+    }
 end
 
 return NeoHotbar

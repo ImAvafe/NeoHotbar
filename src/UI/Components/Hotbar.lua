@@ -17,12 +17,12 @@ return function(Props)
 		local Return = {}
 		local ToolSlots = States.ToolSlots:get()
 		local CustomButtons = States.CustomButtons:get()
-		for ToolNum, ToolSlot in ipairs(ToolSlots) do
+		for ToolNumber, ToolSlot in ipairs(ToolSlots) do
 			table.insert(Return, ToolButton {
 				Tool = ToolSlot.Tool,
-				ToolNumber = ToolNum,
+				ToolNumber = ToolNumber,
 				Equipped = ToolSlot.Equipped,
-				LayoutOrder = #CustomButtons + ToolNum,
+				LayoutOrder = #CustomButtons + ToolNumber,
 			})
 		end
 		return Return

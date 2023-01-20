@@ -10,7 +10,7 @@ local Hydrate = Fusion.Hydrate
 local WithChild = Fusion.WithChild
 
 local Components = NeoHotbar.UI.Components
-local DehydratedComps = require(NeoHotbar.UI.DehydratedComps)
+local Instances = require(NeoHotbar.UI.Instances)
 
 local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
@@ -28,7 +28,7 @@ return function(Props)
 		end
 	end)
 	
-	return Hydrate(DehydratedComps:Get().ToolButton:Clone()) {
+	return Hydrate(Instances:Get().ToolButton:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()

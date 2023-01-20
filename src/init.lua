@@ -6,7 +6,7 @@ local VRService = game:GetService("VRService")
 
 local States = require(script.UI.States)
 local Utils = require(script.Utils)
-local DehydratedComps = require(script.UI.DehydratedComps)
+local Instances = require(script.UI.Instances)
 
 local HotbarGui = require(script.UI.Components.Hotbar)
 
@@ -41,7 +41,7 @@ end
 
 function NeoHotbar:UpdateGuiSet(CustomGuiSet: ScreenGui)
     assert(self._Started, "NeoHotbar needs to have been started to reload its GUI.")
-    DehydratedComps:Overwrite(CustomGuiSet)
+    Instances:Overwrite(CustomGuiSet)
     self._HotbarGui:Destroy()
     self:_CreateGui()
 end
@@ -52,7 +52,7 @@ function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
 		Icon = IconImage,
 		Callback = Callback,
    })
-   States.CustomButtons:set(CustomButtons, true)
+   States.CustomButtons:set(CustomButtons)
 end
 
 function NeoHotbar:_CreateGui()

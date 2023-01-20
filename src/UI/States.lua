@@ -31,7 +31,7 @@ function States:_ToolAdded(Tool)
         else
             ToolSlot.Equipped = Tool.Parent == self.Char
         end
-        self.ToolSlots:set(ToolSlots, true)
+        self.ToolSlots:set(ToolSlots)
     end
 end
 
@@ -44,7 +44,7 @@ function States:_ToolRemoved(Tool)
         else
             ToolSlot.Equipped = Tool.Parent == self.Char
         end
-        self.ToolSlots:set(ToolSlots, true)
+        self.ToolSlots:set(ToolSlots)
     end
 end
 

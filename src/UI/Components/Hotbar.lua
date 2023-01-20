@@ -3,11 +3,13 @@ local NeoHotbar = script:FindFirstAncestor("NeoHotbar")
 local Fusion = require(NeoHotbar.ExtPackages.Fusion)
 local States = require(NeoHotbar.UI.States)
 
-local New = Fusion.New
 local Computed = Fusion.Computed
 local Children = Fusion.Children
+local Hydrate = Fusion.Hydrate
+local WithChild = Fusion.WithChild
 
 local Components = NeoHotbar.UI.Components
+local Instances = require(NeoHotbar.UI.Instances)
 
 local ToolButton = require(Components.ToolButton)
 local CustomButton = require(Components.CustomButton)
@@ -39,29 +41,15 @@ return function(Props)
 		end
 		return Return
 	end)
-
-	return New "ScreenGui" {
+	
+	return Hydrate(Instances:Get().Hotbar:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 
-		[Children] = {
-			New "Frame" {
-				Name = "Hotbar",
-				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.new(UDim.new(0.5, 0), UDim.new(1, -70)),
-				Size = UDim2.fromOffset(655, 70),
-				BackgroundTransparency = 1,
-
-				[Children] = {
-					New "UIListLayout" {
-						Padding = UDim.new(0, 7),
-						FillDirection = Enum.FillDirection.Horizontal,
-						HorizontalAlignment = Enum.HorizontalAlignment.Center,
-					},
-
-					HotbarTools,
-					HotbarCustomButtons,
-				}
+		[WithChild "Hotbar"] = {
+			[Children] = {
+				HotbarTools,
+				HotbarCustomButtons,
 			}
 		}
 	}

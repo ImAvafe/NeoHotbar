@@ -9,7 +9,6 @@ local Hydrate = Fusion.Hydrate
 local WithChild = Fusion.WithChild
 
 local Components = NeoHotbar.UI.Components
-local Instances = require(NeoHotbar.UI.Instances)
 
 local ToolButton = require(Components.ToolButton)
 local CustomButton = require(Components.CustomButton)
@@ -42,7 +41,7 @@ return function(Props)
 		return Return
 	end)
 	
-	return Hydrate(Instances:Get().Hotbar:Clone()) {
+	return Hydrate(States.Instances:get().Hotbar:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 

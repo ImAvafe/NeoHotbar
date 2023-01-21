@@ -6,7 +6,6 @@ local VRService = game:GetService("VRService")
 
 local States = require(script.UI.States)
 local Utils = require(script.Utils)
-local Instances = require(script.UI.Instances)
 
 local HotbarGui = require(script.UI.Components.Hotbar)
 
@@ -39,9 +38,10 @@ function NeoHotbar:Start()
     end)
 end
 
-function NeoHotbar:UpdateGuiSet(CustomGuiSet: ScreenGui)
+function NeoHotbar:UpdateGuiSet(CustomGuiSet: Folder, DisableDefaultEffects)
     assert(self._Started, "NeoHotbar needs to have been started to reload its GUI.")
-    Instances:Overwrite(CustomGuiSet)
+    States.Instances:set(CustomGuiSet)
+    States.DefaultEffectsEnabled:set(not DisableDefaultEffects)
     self._HotbarGui:Destroy()
     self:_CreateGui()
 end

@@ -91,6 +91,9 @@ function States:Start()
 end
 
 function States:Init()
+    self.Instances = Value(NeoHotbar.UI.DefaultInstances)
+    self.DefaultEffectsEnabled = Value(true)
+
     self.ToolSlots = Value({})
     self.CustomButtons = Value({})
 end

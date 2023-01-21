@@ -25,7 +25,7 @@ return function(Props)
 
 		[WithChild "ToolNumber"] = {
 			Text = Props.ToolNumber,
-			Font = Enum.Font.Gotham,
+			Font = (States.DefaultEffectsEnabled:get() and Enum.Font.Gotham) or nil,
 		},
 
 		[Children] = {

@@ -1,11 +1,18 @@
-# NeoHotbar
+<h1 align="center">
+  NeoHotbar
+</h1>
 
-NeoHotbar is a sleek, modern hotbar for Roblox. Seamlessly integratable and configurable.
+<p align="center">
+    A modern, customizable hotbar for Roblox
+</p>
 
-- Easy integration ✅
-- Fully modifiable interface ✅
-- Platform support 💻📱 *(console soon)*
-- Documentation ❌⏳
+<p align="center">
+  <img alt="Platforms" src="https://img.shields.io/badge/compatibility-%F0%9F%92%BB%20%F0%9F%93%B1%20%F0%9F%8E%AE-green">
+  <img alt="Downloads" src="https://img.shields.io/github/downloads/ImAvafe/NeoHotbar/total">
+  <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar">
+</p>
+
+https://user-images.githubusercontent.com/65048459/214197376-0f92a0e0-43e6-4eef-933d-37b6d7cb87c2.mp4
 
 # Install
 

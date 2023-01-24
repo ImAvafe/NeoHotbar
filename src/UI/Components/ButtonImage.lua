@@ -7,7 +7,7 @@ local Hydrate = Fusion.Hydrate
 local WithChild = Fusion.WithChild
 
 return function(Props)
-	return Hydrate(States.Instances:get().ButtonImage:Clone()) {
+	return Hydrate(States.InstanceSet:get().ButtonImage:Clone()) {
 		[WithChild "Image"] = {
 			Image = Props.Image
 		}

@@ -16,7 +16,7 @@ local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
 
 return function(Props)
-	local ToolButton = Hydrate(States.Instances:get().ToolButton:Clone()) {
+	local ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()

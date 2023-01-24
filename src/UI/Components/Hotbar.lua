@@ -41,7 +41,7 @@ return function(Props)
 		return Return
 	end)
 	
-	return Hydrate(States.Instances:get().Hotbar:Clone()) {
+	return Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 

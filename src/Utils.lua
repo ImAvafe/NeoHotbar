@@ -12,4 +12,14 @@ function Utils:ToggleToolEquipped(Tool: Tool)
     end
 end
 
+function Utils:GetEquippedToolSlot()
+    local ToolSlots = States.ToolSlots:get()
+    for _, ToolSlot in ipairs(ToolSlots) do
+        if ToolSlot.Equipped then
+            local Index = table.find(ToolSlots, ToolSlot)
+            return ToolSlot, Index
+        end
+    end
+end
+
 return Utils

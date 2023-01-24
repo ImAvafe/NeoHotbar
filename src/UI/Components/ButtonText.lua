@@ -7,7 +7,7 @@ local States = require(NeoHotbar.UI.States)
 local Hydrate = Fusion.Hydrate
 
 return function(Props)
-	return Hydrate(States.Instances:get().ButtonText:Clone()) {
+	return Hydrate(States.InstanceSet:get().ButtonText:Clone()) {
 		Text = Props.Text or "Text",
 		Font = (States.DefaultEffectsEnabled:get() and Enum.Font.Gotham) or nil,
 	}

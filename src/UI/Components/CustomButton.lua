@@ -12,7 +12,7 @@ local Components = NeoHotbar.UI.Components
 local ButtonImage = require(Components.ButtonImage)
 
 return function(Props)
-	return Hydrate(States.Instances:get().CustomButton:Clone()) {
+	return Hydrate(States.InstanceSet:get().CustomButton:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = Props.Callback,

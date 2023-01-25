@@ -8,7 +8,6 @@
 
 <p align="center">
   <img alt="Platforms" src="https://img.shields.io/badge/compatibility-%F0%9F%92%BB%20%F0%9F%93%B1%20%F0%9F%8E%AE-green">
-  <img alt="Downloads" src="https://img.shields.io/github/downloads/ImAvafe/NeoHotbar/total">
   <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar">
 </p>
 

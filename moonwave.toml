@@ -13,7 +13,7 @@ favicon = "/brand/NeoHotbarGlyphLight.svg"
 # From git:
 organizationName = "Avafe"
 projectName = "NeoHotbar"
-url = "https://avafe.me/NeoHotbar"
+url = "https://avafe.me/"
 baseUrl = "/"
 tagline = "A modern, customizable hotbar for Roblox"
 

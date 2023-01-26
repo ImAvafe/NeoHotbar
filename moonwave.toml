@@ -1,0 +1,32 @@
+title = "NeoHotbar"  # From Git
+gitRepoUrl = "https://github.com/imavafe/neohotbar" # From Git
+
+gitSourceBranch = "master"
+changelog = true
+classOrder = []
+
+[docusaurus]
+onBrokenLinks = "throw"
+onBrokenMarkdownLinks = "warn"
+# favicon = ""
+
+# From git:
+organizationName = "Avafe"
+projectName = "NeoHotbar"
+url = "https://avafe.me/NeoHotbar"
+baseUrl = "/NeoHotbar/"
+tagline = "A modern, customizable hotbar for Roblox"
+
+[navbar]
+# hideableSidebar = true
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2023 Avafe. Built with Moonwave and Docusaurus"
+
+# [[footer.docs]]
+# title = "Docs"
+
+# [[footer.docs.items]]
+# label = "Getting Started"
+# href = "https://avafe.me/NeoHotbar/docs/intro"

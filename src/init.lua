@@ -15,11 +15,17 @@ if not RunService:IsStudio() then
     print("NeoHotbar 0.1.0 by Avafe 🌟🛠")
 end
 
+--[=[
+    @class NeoHotbar
+]=]
 local NeoHotbar = {
     _Started = false,
     _States = script.UI.States,
 }
 
+--[=[
+    Initializes NeoHotbar and deploys its UI with default settings.
+]=]
 function NeoHotbar:Start()
     assert(not self._Started, "NeoHotbar has already been started. It cannot be started again.")
     self._Started = true
@@ -70,23 +76,40 @@ function NeoHotbar:Start()
     end)
 end
 
-function NeoHotbar:UpdateGuiSet(CustomGuiSet: Folder, DisableDefaultEffects)
-    assert(self._Started, "NeoHotbar needs to have been started to reload its GUI.")
+--[=[
+    Overrides NeoHotbar's UI with a new set of Gui objects.
+
+    @param CustomGuiSet -- The parent folder containing your custom Gui objects.
+]=]
+function NeoHotbar:OverrideGui(CustomGuiSet: Folder)
+    assert(self._Started, "NeoHotbar needs to be started before you can override its GUI!")
     States.InstanceSet:set(CustomGuiSet)
-    States.DefaultEffectsEnabled:set(not DisableDefaultEffects)
+    States.DefaultEffectsEnabled:set(false)
     self._HotbarGui:Destroy()
     self:_CreateGui()
 end
 
+--[=[
+    Adds a custom button to the hotbar, prepended to the left-most side.
+
+    @param IconImage string -- The image URI to be used on the button icon. E.g. "rbxassetid://"
+    @param Callback function -- The function called upon button activation (click/touch/etc).
+]=]
 function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
-   local CustomButtons = States.CustomButtons:get()
-   table.insert(CustomButtons, {
-		Icon = IconImage,
+    assert(self._Started, "NeoHotbar needs to be started before you can add custom buttons!")
+    local CustomButtons = States.CustomButtons:get()
+    table.insert(CustomButtons, {
+	    Icon = IconImage,
 		Callback = Callback,
-   })
-   States.CustomButtons:set(CustomButtons)
+    })
+    States.CustomButtons:set(CustomButtons)
 end
 
+--[=[
+    @private
+
+    Creates/updates NeoHotbar's UI. To be used internally.
+]=]
 function NeoHotbar:_CreateGui()
     self._HotbarGui = HotbarGui {
         Parent = Players.LocalPlayer.PlayerGui

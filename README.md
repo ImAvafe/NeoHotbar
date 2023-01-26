@@ -1,29 +1,32 @@
-<h1 align="center">
-  NeoHotbar
-</h1>
+<p align="center">
+  <a href="https://avafe.me/NeoHotbar" target="_blank">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="/brand/NeoHotbarLogoLight.svg">
+      <source media="(prefers-color-scheme: light)" srcset="/brand/NeoHotbarLogoDark.svg">
+      <img alt="NeoHotbar" src="/brand/NeoHotbarLogoLight.svg" width="350" height="70" style="max-width: 100%;">
+    </picture>
+  </a>
+</p>
 
 <p align="center">
     A modern, customizable hotbar for Roblox
 </p>
 
 <p align="center">
-  <img alt="Platforms" src="https://img.shields.io/badge/compatibility-%F0%9F%92%BB%20%F0%9F%93%B1%20%F0%9F%8E%AE-green">
-  <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar">
+  <img alt="Platforms" src="https://img.shields.io/badge/compatibility-%F0%9F%92%BB%20%F0%9F%93%B1%20%F0%9F%8E%AE-green"></img>
+  <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
 </p>
+
+---
 
 https://user-images.githubusercontent.com/65048459/214197376-0f92a0e0-43e6-4eef-933d-37b6d7cb87c2.mp4
 
-# Install
+## Installation 📦
 
-*NeoHotbar is not ready to install at the moment. The following instructions are <u>placeholder.</u>*
+For easy installation, insert [NeoHotbar]() from the Toolbox. **UPDATE MEE**
 
-## Roblox Studio
+For Rojo / advanced users, read the [installation docs](https://avafe.me/NeoHotbar/docs/intro#installation).
 
-1. Get [NeoHotbar](empty) from the toolbox.
-2. Place NeoHotbar into `StarterPlayer/StarterPlayerScripts`
+## Customization ✨
 
-## Rojo + Wally
-
-1. Add [NeoHotbar](https://wally.run) as a Wally dependency.
-2. Have Rojo sync the Wally packages.
-3. Run `:Start()` on the NeoHotbar module from a client-side script.
+For info on customizing NeoHotbar, visit the [documentation site](https://avafe.me/NeoHotbar/docs/customization).

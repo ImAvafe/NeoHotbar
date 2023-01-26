@@ -14,7 +14,7 @@ It follows standard Roblox conventions, using the `Tool` object and its associat
 
 ### Roblox Studio
 
-1. Get [NeoHotbar](empty) from the toolbox.
+1. Get [NeoHotbar](https://example.com) from the toolbox.
 2. Place NeoHotbar into `StarterPlayer/StarterPlayerScripts`
 
 ### Rojo + Wally
@@ -24,4 +24,4 @@ It follows standard Roblox conventions, using the `Tool` object and its associat
 
 ---
 
-That's all you actually need to do to use NeoHotbar! Now you can leave it as-is or get into *customization.* ✨
+That's all you actually need to do to use NeoHotbar! Now you can leave it as-is or get into *[customization](/docs/customization).* ✨

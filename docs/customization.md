@@ -6,17 +6,17 @@ sidebar_position: 2
 
 ## Custom UI
 
-You can completely customize NeoHotbar's UI however you like! You can even add your own reactive effects.
+NeoHotbar's UI is fully overridable, so you can customize it however you like! You can also plug into reactive properties like `Equipped`.
 
 *Behind the scenes, this uses Fusion's magical instance hydration!*
 
-### Modification
+### Modifying
 
-1. Copy over the default UI to use as a template.
-2. Piece it together for easy modification.
+1. Copy over the default UI to use as a template. The default UI can be found in `NeoHotbar/UI/DefaultInstances`.
+2. Piece the components together for live preview.
 3. Modify all you like, you have full control!
 
-### Application
+### Applying
 
 1. Break your UI apart again and put it into a folder.
 2. Call `:OverrideGui()` on NeoHotbar and tell it to use your folder.

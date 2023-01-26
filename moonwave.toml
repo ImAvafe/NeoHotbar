@@ -1,21 +1,22 @@
-title = "NeoHotbar"  # From Git
-gitRepoUrl = "https://github.com/ImAvafe/NeoHotbar" # From Git
-
-gitSourceBranch = "master"
-changelog = true
-classOrder = []
-
 [docusaurus]
-onBrokenLinks = "throw"
-onBrokenMarkdownLinks = "warn"
-favicon = "/brand/NeoHotbarGlyphLight.svg"
-
-# From git:
-organizationName = "Avafe"
-projectName = "NeoHotbar"
-url = "https://avafe.me/"
-baseUrl = "/"
+url = "https://avafe.me"
 tagline = "A modern, customizable hotbar for Roblox"
+favicon = "/img/favicon.svg"
+
+[home]
+enabled = true
+
+[[home.features]]
+title = "Easy to Use"
+description = "Getting started with NeoHotbar is easy, and customization is too."
+
+[[home.features]]
+title = "Customization"
+description = "NeoHotbar features full GUI overriding, custom buttons and more. Make your hotbar for you."
+
+[[home.features]]
+title = "Feature Parity"
+description = "NeoHotbar utilizes Tool objects and all of its features, just like the default Roblox hotbar."
 
 [navbar]
 # hideableSidebar = true

@@ -10,7 +10,7 @@ It follows standard Roblox conventions, using the `Tool` object and its associat
 
 ## Installation
 
-*NeoHotbar is not ready to install at the moment. The following instructions are <u>placeholder.</u>*
+*NeoHotbar is not ready to install! The following instructions are <u>placeholder.</u>*
 
 ### Roblox Studio
 

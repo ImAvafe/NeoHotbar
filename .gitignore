@@ -2,3 +2,5 @@
 
 *.lock
 *.rbxl.lock
+
+build

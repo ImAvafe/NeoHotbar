@@ -1,5 +1,5 @@
 title = "NeoHotbar"  # From Git
-gitRepoUrl = "https://github.com/imavafe/neohotbar" # From Git
+gitRepoUrl = "https://github.com/ImAvafe/NeoHotbar" # From Git
 
 gitSourceBranch = "master"
 changelog = true
@@ -8,13 +8,13 @@ classOrder = []
 [docusaurus]
 onBrokenLinks = "throw"
 onBrokenMarkdownLinks = "warn"
-# favicon = ""
+favicon = "/brand/NeoHotbarGlyphLight.svg"
 
 # From git:
 organizationName = "Avafe"
 projectName = "NeoHotbar"
 url = "https://avafe.me/NeoHotbar"
-baseUrl = "/NeoHotbar/"
+baseUrl = "/"
 tagline = "A modern, customizable hotbar for Roblox"
 
 [navbar]

@@ -6,7 +6,7 @@ sidebar_position: 2
 
 ## Custom UI
 
-You can completely customize NeoHotbar's UI without any coding experience! All you need is to be able to modify Gui instances.
+You can completely customize NeoHotbar's UI however you like! You can even add your own reactive effects.
 
 *Behind the scenes, this uses Fusion's magical instance hydration!*
 

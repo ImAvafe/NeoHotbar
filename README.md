@@ -1,9 +1,9 @@
 <p align="center">
   <a href="https://avafe.me/NeoHotbar" target="_blank">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/brand/NeoHotbarLogoLight.svg">
-      <source media="(prefers-color-scheme: light)" srcset="/brand/NeoHotbarLogoDark.svg">
-      <img alt="NeoHotbar" src="/brand/NeoHotbarLogoLight.svg" width="350" height="70" style="max-width: 100%;">
+      <source media="(prefers-color-scheme: dark)" srcset="/brand/NeoHotbarLogoLight.svg"></source>
+      <source media="(prefers-color-scheme: light)" srcset="/brand/NeoHotbarLogoDark.svg"></source>
+      <img alt="NeoHotbar" src="/brand/NeoHotbarLogoLight.svg" width="350" height="70" style="max-width: 100%;"></img>
     </picture>
   </a>
 </p>
@@ -23,7 +23,9 @@ https://user-images.githubusercontent.com/65048459/214197376-0f92a0e0-43e6-4eef-
 
 ## Installation 📦
 
-For easy installation, insert [NeoHotbar]() from the Toolbox. **UPDATE MEE**
+*NeoHotbar is not ready to install! The following instructions are <u>placeholder!</u>*
+
+For easy installation, insert [NeoHotbar](#) from the Toolbox. **UPDATE MEE**
 
 For Rojo / advanced users, read the [installation docs](https://avafe.me/NeoHotbar/docs/intro#installation).
 

@@ -15,8 +15,6 @@
   <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
 </p>
 
----
-
 ## Installation 📦
 
 *NeoHotbar is not ready to install! The following instructions are <u>placeholder!</u>*

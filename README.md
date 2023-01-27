@@ -17,9 +17,11 @@
   <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
 </p>
 
----
+<p align="center">
+    <a href="https://youtu.be/eIpizH9iMgU">> Demo Video <</a>
+</p>
 
-https://user-images.githubusercontent.com/65048459/214197376-0f92a0e0-43e6-4eef-933d-37b6d7cb87c2.mp4
+---
 
 ## Installation 📦
 

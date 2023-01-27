@@ -1,11 +1,9 @@
 <p align="center">
-  <a href="https://avafe.me/NeoHotbar" target="_blank">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="/gh-assets/NeoHotbarLogoLight.svg"></source>
       <source media="(prefers-color-scheme: light)" srcset="/gh-assets/NeoHotbarLogoDark.svg"></source>
       <img alt="NeoHotbar" src="/gh-assets/NeoHotbarLogoLight.svg" width="350" height="70"></img>
     </picture>
-  </a>
 </p>
 
 <p align="center">
@@ -15,10 +13,6 @@
 <p align="center">
   <img alt="Platforms" src="https://img.shields.io/badge/compatibility-%F0%9F%92%BB%20%F0%9F%93%B1%20%F0%9F%8E%AE-green"></img>
   <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
-</p>
-
-<p align="center">
-    <a href="https://youtu.be/eIpizH9iMgU">> Demo Video <</a>
 </p>
 
 ---
@@ -31,6 +25,6 @@ For easy installation, insert [NeoHotbar](https://example.com) from the Toolbox.
 
 For Rojo / advanced users, read the [installation docs](https://avafe.me/NeoHotbar/docs/intro#installation).
 
-## Customization ✨
+## Documentation 📄
 
-For info on customizing NeoHotbar, visit the [documentation site](https://avafe.me/NeoHotbar/docs/customization).
+For info on customization, API and more, visit the [documentation site](https://avafe.me/NeoHotbar/docs/customization).

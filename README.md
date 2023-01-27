@@ -26,3 +26,7 @@ For Rojo / advanced users, read the [installation docs](https://avafe.me/NeoHotb
 ## Documentation 📄
 
 For info on customization, API and more, visit the [documentation site](https://avafe.me/NeoHotbar/docs/customization).
+
+## Live Demo ▶
+
+A live testing place is available at [NeoHotbar Demo](https://roblox.com/games/12259231211).

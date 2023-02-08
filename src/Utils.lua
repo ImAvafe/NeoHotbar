@@ -22,4 +22,13 @@ function Utils:GetEquippedToolSlot()
     end
 end
 
+function Utils:FindCustomButton(ButtonName: string)
+    local CustomButtons = States.CustomButtons:get()
+    for _, CustomButton in ipairs(CustomButtons) do
+        if CustomButton.Name == ButtonName then
+            return CustomButton
+        end
+    end
+end
+
 return Utils

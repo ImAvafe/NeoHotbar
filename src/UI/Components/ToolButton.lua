@@ -51,5 +51,7 @@ return function(Props)
 		}
 	end
 
+	ToolButton:SetAttribute("Equipped", Props.Equipped)
+
 	return ToolButton
 end

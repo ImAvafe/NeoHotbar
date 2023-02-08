@@ -21,6 +21,7 @@ end
 local NeoHotbar = {
     _Started = false,
     _States = script.UI.States,
+    _Utils = script.Utils,
 }
 
 --[=[
@@ -81,10 +82,12 @@ end
 
     @param CustomGuiSet -- The parent folder containing your custom Gui objects.
 ]=]
-function NeoHotbar:OverrideGui(CustomGuiSet: Folder)
+function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: any)
     assert(self._Started, "NeoHotbar needs to be started before you can override its GUI!")
+    DefaultEffectsEnabled = (DefaultEffectsEnabled == nil and false) or DefaultEffectsEnabled
+
     States.InstanceSet:set(CustomGuiSet)
-    States.DefaultEffectsEnabled:set(false)
+    States.DefaultEffectsEnabled:set(DefaultEffectsEnabled)
     self._HotbarGui:Destroy()
     self:_CreateGui()
 end
@@ -92,16 +95,35 @@ end
 --[=[
     Adds a custom button to the hotbar, prepended to the left-most side.
 
-    @param IconImage string -- The image URI to be used on the button icon. E.g. "rbxassetid://"
+    @param ButtonName string -- The name/identifier of the button to be added.
+    @param IconImage string -- The image URI to be used on the button icon. E.g. "rbxassetid://".
     @param Callback function -- The function called upon button activation (click/touch/etc).
 ]=]
-function NeoHotbar:AddCustomButton(IconImage: string, Callback: any)
+function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any)
     assert(self._Started, "NeoHotbar needs to be started before you can add custom buttons!")
+
     local CustomButtons = States.CustomButtons:get()
     table.insert(CustomButtons, {
+        Name = ButtonName,
 	    Icon = IconImage,
 		Callback = Callback,
     })
+    States.CustomButtons:set(CustomButtons)
+end
+
+--[=[
+    Removes the specified custom button from the hotbar.
+
+    @param ButtonName string -- The name of the button to be removed.
+]=]
+function NeoHotbar:RemoveCustomButton(ButtonName: string)
+    assert(self._Started, "NeoHotbar needs to be started before you can remove custom buttons!")
+
+    local CustomButton = Utils:FindCustomButton(ButtonName)
+    assert(CustomButton, "Custom button \""..ButtonName.."\" could not be found.")
+
+    local CustomButtons = States.CustomButtons:get()
+    table.remove(CustomButtons, table.find(CustomButtons, CustomButton))
     States.CustomButtons:set(CustomButtons)
 end
 

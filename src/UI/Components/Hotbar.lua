@@ -15,27 +15,26 @@ local CustomButton = require(Components.CustomButton)
 
 return function(Props)
 	local HotbarTools = Computed(function()
-		local Return = {}
 		local ToolSlots = States.ToolSlots:get()
-		local CustomButtons = States.CustomButtons:get()
+		local Return = {}
 		for ToolNumber, ToolSlot in ipairs(ToolSlots) do
 			table.insert(Return, ToolButton {
 				Tool = ToolSlot.Tool,
 				ToolNumber = ToolNumber,
 				Equipped = ToolSlot.Equipped,
-				LayoutOrder = #CustomButtons + ToolNumber,
+				LayoutOrder = ToolNumber,
 			})
 		end
 		return Return
 	end)
 	local HotbarCustomButtons = Computed(function()
-		local Return = {}
 		local CustomButtons = States.CustomButtons:get()
-		for ButtonNumber, CustomButtonData in ipairs(CustomButtons) do
+		local Return = {}
+		for CustomButtonNumber, CustomButtonData in ipairs(CustomButtons) do
 			table.insert(Return, CustomButton {
 				Icon = CustomButtonData.Icon,
 				Callback = CustomButtonData.Callback,
-				LayoutOrder = ButtonNumber,
+				LayoutOrder = CustomButtonNumber,
 			})
 		end
 		return Return
@@ -46,10 +45,12 @@ return function(Props)
 		Parent = Props.Parent,
 
 		[WithChild "Hotbar"] = {
-			[Children] = {
-				HotbarTools,
-				HotbarCustomButtons,
-			}
+			[WithChild "CustomButtons"] = {
+				[Children] = HotbarCustomButtons,
+			},
+			[WithChild "ToolSlots"] = {
+				[Children] = HotbarTools,
+			},
 		}
 	}
 end

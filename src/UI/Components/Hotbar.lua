@@ -12,6 +12,7 @@ local Components = NeoHotbar.UI.Components
 
 local ToolButton = require(Components.ToolButton)
 local CustomButton = require(Components.CustomButton)
+local ToolTip = require(Components.ToolTip)
 
 return function(Props)
 	local HotbarTools = Computed(function()
@@ -88,7 +89,19 @@ return function(Props)
 							return not ManagementModeEnabled
 						end)
 					},
-				}
+					[WithChild "UIListLayout"] = {
+						Padding = Computed(function()
+							local ToolSlots = States.ToolSlots:get()
+							local CustomButtons = States.CustomButtons:get()
+							local OffsetPadding = ((#ToolSlots >= 1 and #CustomButtons >= 1) and 10) or 0
+							return UDim.new(0, OffsetPadding)
+						end)
+					},
+				},
+
+				[Children] = {
+					ToolTip {},
+				},
 			}
 		}
 	end

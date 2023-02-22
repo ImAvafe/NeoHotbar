@@ -33,7 +33,7 @@ return function(Props)
 			if not States.ManagementModeEnabled:get() then
 				task.spawn(function()
 					Holding:set(true)
-					task.wait(0.25)
+					task.wait(0.2)
 					if Holding:get() == true then
 						States.ManagementModeEnabled:set(true)
 						States.CurrentContextActionsSlot:set(Props.Slot)

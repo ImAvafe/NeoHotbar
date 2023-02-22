@@ -31,6 +31,17 @@ function States:_ToolAdded(Tool)
             })
         else
             ToolSlot.Equipped = Tool.Parent == self.Char
+            if ToolSlot.Equipped then
+                if string.len(Tool.ToolTip) >= 1 then
+                    self.ToolTipText:set(Tool.ToolTip)
+                    self.ToolTipVisible:set(true)
+                    task.delay(2, function()
+                        self.ToolTipVisible:set(false)
+                    end)
+                else
+                    self.ToolTipVisible:set(false)
+                end
+            end
         end
         self.ToolSlots:set(ToolSlots)
     end
@@ -104,6 +115,8 @@ function States:Init()
 
     self.ManagementModeEnabled = Value(false)
     self.CurrentContextActionsSlot = Value()
+    self.ToolTipText = Value('')
+    self.ToolTipVisible = Value(false)
 
     self.ToolSlots = Value({})
     self.CustomButtons = Value({})

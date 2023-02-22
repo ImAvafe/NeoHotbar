@@ -19,6 +19,7 @@ return function(Props)
 		local Return = {}
 		for ToolNumber, ToolSlot in ipairs(ToolSlots) do
 			table.insert(Return, ToolButton {
+				Slot = ToolSlot,
 				Tool = ToolSlot.Tool,
 				ToolNumber = ToolNumber,
 				Equipped = ToolSlot.Equipped,
@@ -40,17 +41,57 @@ return function(Props)
 		return Return
 	end)
 	
-	return Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
+	local Hotbar = Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 
 		[WithChild "Hotbar"] = {
-			[WithChild "CustomButtons"] = {
-				[Children] = HotbarCustomButtons,
-			},
-			[WithChild "ToolSlots"] = {
-				[Children] = HotbarTools,
+			[WithChild "Buttons"] = {
+				[WithChild "CustomButtons"] = {
+					[Children] = HotbarCustomButtons,
+				},
+				[WithChild "ToolSlots"] = {
+					[Children] = HotbarTools,
+				},
 			},
 		}
 	}
+
+	if States.DefaultEffectsEnabled:get() then
+		local Padding = Computed(function()
+			local ManagementModeEnabled = States.ManagementModeEnabled:get()
+			return UDim.new(0, (ManagementModeEnabled and 5) or 0)
+		end)
+
+		Hydrate(Hotbar) {
+			[WithChild "Hotbar"] = {
+				[WithChild "Buttons"] = {
+					[WithChild "ToolSlots"] = {
+						BackgroundTransparency = Computed(function()
+							local ManagementModeEnabled = States.ManagementModeEnabled:get()
+							return (ManagementModeEnabled and 0.7) or 1
+						end),
+
+						[WithChild "UIPadding"] = {
+							PaddingTop = Padding,
+							PaddingBottom = Padding,
+							PaddingRight = Padding,
+							PaddingLeft = Padding,
+						},
+						[WithChild "UIStroke"] = {
+							Enabled = States.ManagementModeEnabled,
+						},
+					},
+					[WithChild "CustomButtons"] = {
+						Visible = Computed(function()
+							local ManagementModeEnabled = States.ManagementModeEnabled:get()
+							return not ManagementModeEnabled
+						end)
+					},
+				}
+			}
+		}
+	end
+
+	return Hotbar
 end

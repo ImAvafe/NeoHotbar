@@ -5,6 +5,7 @@ local NeoHotbar = script:FindFirstAncestor("NeoHotbar")
 local Fusion = require(NeoHotbar.ExtPackages.Fusion)
 
 local Value = Fusion.Value
+local Observer = Fusion.Observer
 
 local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 
@@ -88,11 +89,21 @@ function States:Start()
     if Char then
         self:_CharacterAdded(Char)
     end
+
+    Observer(self.ManagementModeEnabled):onChange(function()
+        local ManagementModeEnabled = States.ManagementModeEnabled:get()
+        if ManagementModeEnabled then
+            self.Humanoid:UnequipTools()
+        end
+    end)
 end
 
 function States:Init()
     self.InstanceSet = Value(NeoHotbar.UI.DefaultInstances)
     self.DefaultEffectsEnabled = Value(true)
+
+    self.ManagementModeEnabled = Value(false)
+    self.CurrentContextActionsSlot = Value()
 
     self.ToolSlots = Value({})
     self.CustomButtons = Value({})

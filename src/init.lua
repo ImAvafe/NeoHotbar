@@ -41,12 +41,18 @@ function NeoHotbar:Start()
     end
 
     UserInputService.InputEnded:Connect(function(Input)
+        if UserInputService:GetFocusedTextBox() then return end
         local ToolSlots = States.ToolSlots:get()
         if Input.UserInputType == Enum.UserInputType.Keyboard then
             local InputNumber = tonumber(UserInputService:GetStringForKeyCode(Input.KeyCode))
-            local ToolSlot = ToolSlots[InputNumber]
-            if ToolSlot and not UserInputService:GetFocusedTextBox() then
-                Utils:ToggleToolEquipped(ToolSlot.Tool)
+            if InputNumber then
+                local ToolSlot = ToolSlots[InputNumber]
+                States.ManagementModeEnabled:set(false)
+                if ToolSlot then
+                    Utils:ToggleToolEquipped(ToolSlot.Tool)
+                end
+            elseif Input.KeyCode == Enum.KeyCode.Backquote then
+                States.ManagementModeEnabled:set(not States.ManagementModeEnabled:get())
             end
         elseif Input.UserInputType == Enum.UserInputType.Gamepad1 then
             local EquippedToolSlot, EquippedToolSlotIndex = Utils:GetEquippedToolSlot()
@@ -73,6 +79,18 @@ function NeoHotbar:Start()
                 end
             end
             Utils:ToggleToolEquipped(ToolSlot.Tool)
+        elseif Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch  then
+            local InteractedGuiObjects = Players.LocalPlayer.PlayerGui:GetGuiObjectsAtPosition(Input.Position.X, Input.Position.Y)
+            local GuiWithinToolSlots
+            for _, GuiObject in ipairs(InteractedGuiObjects) do
+                if GuiObject:FindFirstAncestor("Hotbar") then
+                    GuiWithinToolSlots = true
+                end
+            end
+            if not GuiWithinToolSlots then
+                States.ManagementModeEnabled:set(false)
+                States.CurrentContextActionsSlot:set()
+            end
         end
     end)
 end

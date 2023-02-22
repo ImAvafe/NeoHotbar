@@ -9,6 +9,7 @@ local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Hydrate = Fusion.Hydrate
 local WithChild = Fusion.WithChild
+local Value = Fusion.Value
 
 local Components = NeoHotbar.UI.Components
 
@@ -16,11 +17,32 @@ local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
 
 return function(Props)
+	local Holding = Value(false)
+
 	local ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()
-			Utils:ToggleToolEquipped(Props.Tool)
+			if not States.ManagementModeEnabled:get() then
+				Utils:ToggleToolEquipped(Props.Tool)
+			else
+				States.CurrentContextActionsSlot:set(Props.Slot)
+			end
+		end,
+		[OnEvent "MouseButton1Down"] = function()
+			if not States.ManagementModeEnabled:get() then
+				task.spawn(function()
+					Holding:set(true)
+					task.wait(0.25)
+					if Holding:get() == true then
+						States.ManagementModeEnabled:set(true)
+						States.CurrentContextActionsSlot:set(Props.Slot)
+					end
+				end)
+			end
+		end,
+		[OnEvent "MouseButton1Up"] = function()
+			Holding:set(false)
 		end,
 
 		[WithChild "ToolNumber"] = {

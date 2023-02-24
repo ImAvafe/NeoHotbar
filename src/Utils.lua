@@ -4,6 +4,20 @@ local States = require(NeoHotbar.UI.States)
 
 local Utils = {}
 
+function Utils:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
+    States.ContextMenu:set({GuiObject = ToolButton, Actions = {
+        {Name = "Drop Item", Disabled = not Tool.CanBeDropped, Function = function()
+            self:DropTool(Tool)
+        end}
+    }})
+    States.ToolTipVisible:set(false)
+end
+
+function Utils:DropTool(Tool: Tool)
+    States.Humanoid:EquipTool(Tool)
+    Tool.Parent = workspace
+end
+
 function Utils:ToggleToolEquipped(Tool: Tool)
     if Tool.Parent == States.Backpack then
         States.Humanoid:EquipTool(Tool)

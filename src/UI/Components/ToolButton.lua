@@ -15,19 +15,26 @@ local Components = NeoHotbar.UI.Components
 
 local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
+local ContextMenu = require(Components.ContextMenu)
+
+local ToolButtonInstance = States.InstanceSet:get().ToolButton
 
 return function(Props)
 	local Holding = Value(false)
 
-	local ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone()) {
+	local ToolButton -- ewwwww
+	ToolButton = Hydrate(ToolButtonInstance:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()
 			if not States.ManagementModeEnabled:get() then
 				Utils:ToggleToolEquipped(Props.Tool)
 			else
-				States.CurrentContextActionsSlot:set(Props.Slot)
+				Utils:SetContextMenuToSlot(ToolButton, Props.Tool)
 			end
+		end,
+		[OnEvent "MouseButton2Click"] = function()
+			Utils:SetContextMenuToSlot(ToolButton, Props.Tool)
 		end,
 		[OnEvent "MouseButton1Down"] = function()
 			if not States.ManagementModeEnabled:get() then
@@ -36,7 +43,8 @@ return function(Props)
 					task.wait(0.2)
 					if Holding:get() == true then
 						States.ManagementModeEnabled:set(true)
-						States.CurrentContextActionsSlot:set(Props.Slot)
+						Utils:SetContextMenuToSlot(ToolButton, Props.Tool)
+						States.ToolTipVisible:set(false)
 					end
 				end)
 			end
@@ -61,7 +69,14 @@ return function(Props)
 						Text = Props.Tool.Name,
 					}
 				end
-			end)
+			end),
+			Computed(function()
+				local ContextMenuValue = States.ContextMenu:get()
+				if not ContextMenuValue then return {} end
+				if ContextMenuValue.GuiObject == ToolButton then
+					return ContextMenu {}
+				end
+			end),
 		}
 	}
 
@@ -69,7 +84,7 @@ return function(Props)
 		Hydrate(ToolButton) {
 			[WithChild "UIStroke"] = {
 				Enabled = Props.Equipped
-			}
+			},
 		}
 	end
 

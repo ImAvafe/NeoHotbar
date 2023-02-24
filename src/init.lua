@@ -47,10 +47,10 @@ function NeoHotbar:Start()
             local InputNumber = tonumber(UserInputService:GetStringForKeyCode(Input.KeyCode))
             if InputNumber then
                 local ToolSlot = ToolSlots[InputNumber]
-                States.ManagementModeEnabled:set(false)
                 if ToolSlot then
                     Utils:ToggleToolEquipped(ToolSlot.Tool)
                 end
+                States.ManagementModeEnabled:set(false)
             elseif Input.KeyCode == Enum.KeyCode.Backquote then
                 States.ManagementModeEnabled:set(not States.ManagementModeEnabled:get())
             end
@@ -89,7 +89,7 @@ function NeoHotbar:Start()
             end
             if not GuiWithinToolSlots then
                 States.ManagementModeEnabled:set(false)
-                States.CurrentContextActionsSlot:set()
+                States.ContextMenu:set()
             end
         end
     end)

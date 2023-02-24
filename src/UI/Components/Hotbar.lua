@@ -13,8 +13,11 @@ local Components = NeoHotbar.UI.Components
 local ToolButton = require(Components.ToolButton)
 local CustomButton = require(Components.CustomButton)
 local ToolTip = require(Components.ToolTip)
+local ContextMenu = require(Components.ContextMenu)
 
 return function(Props)
+	
+
 	local HotbarTools = Computed(function()
 		local ToolSlots = States.ToolSlots:get()
 		local Return = {}
@@ -55,7 +58,13 @@ return function(Props)
 					[Children] = HotbarTools,
 				},
 			},
-		}
+			[Children] = {
+				ToolTip {},
+			},
+		},
+		[Children] = {
+			ContextMenu {},
+		},
 	}
 
 	if States.DefaultEffectsEnabled:get() then
@@ -70,7 +79,7 @@ return function(Props)
 					[WithChild "ToolSlots"] = {
 						BackgroundTransparency = Computed(function()
 							local ManagementModeEnabled = States.ManagementModeEnabled:get()
-							return (ManagementModeEnabled and 0.7) or 1
+							return (ManagementModeEnabled and 0.75) or 1
 						end),
 
 						[WithChild "UIPadding"] = {
@@ -97,10 +106,6 @@ return function(Props)
 							return UDim.new(0, OffsetPadding)
 						end)
 					},
-				},
-
-				[Children] = {
-					ToolTip {},
 				},
 			}
 		}

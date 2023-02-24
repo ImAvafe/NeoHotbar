@@ -6,12 +6,13 @@ local Fusion = require(NeoHotbar.ExtPackages.Fusion)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer
+local Computed = Fusion.Computed
 
 local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 
 local States = {}
 
-function States:_FindToolSlot(Tool)
+function States:_FindToolSlot(Tool: Tool)
     local ToolSlots = self.ToolSlots:get()
     for ToolNum, ToolSlot in ipairs(ToolSlots) do
         if ToolSlot.Tool == Tool then
@@ -20,7 +21,7 @@ function States:_FindToolSlot(Tool)
     end
 end
 
-function States:_ToolAdded(Tool)
+function States:_ToolAdded(Tool: Tool)
     if table.find(VALID_TOOL_CLASSES, Tool.ClassName) then
         local ToolSlots = self.ToolSlots:get()
         local ToolSlot = self:_FindToolSlot(Tool)
@@ -29,30 +30,35 @@ function States:_ToolAdded(Tool)
                 Tool = Tool,
                 Equipped = Tool.Parent == self.Char
             })
+            ToolSlot = self:_FindToolSlot(Tool)
         else
             ToolSlot.Equipped = Tool.Parent == self.Char
-            if ToolSlot.Equipped then
-                if string.len(Tool.ToolTip) >= 1 then
-                    self.ToolTipText:set(Tool.ToolTip)
-                    self.ToolTipVisible:set(true)
-                    task.delay(2, function()
-                        self.ToolTipVisible:set(false)
-                    end)
-                else
-                    self.ToolTipVisible:set(false)
+        end
+        if ToolSlot.Equipped and not States.ManagementModeEnabled:get() then
+            if string.len(Tool.ToolTip) >= 1 then
+                self.ToolTipText:set(Tool.ToolTip)
+                self.ToolTipVisible:set(true)
+                if States.ToolTipProcess then
+                    task.cancel(States.ToolTipProcess)
                 end
+                States.ToolTipProcess = task.delay(2, function()
+                    self.ToolTipVisible:set(false)
+                end)
+            else
+                self.ToolTipVisible:set(false)
             end
         end
         self.ToolSlots:set(ToolSlots)
     end
 end
 
-function States:_ToolRemoved(Tool)
+function States:_ToolRemoved(Tool: Tool)
     local ToolSlots = self.ToolSlots:get()
     local ToolSlot, ToolNum = self:_FindToolSlot(Tool)
     if ToolSlot then
         if not (Tool.Parent == self.Backpack or Tool.Parent == self.Char) then
             table.remove(ToolSlots, ToolNum)
+            States.ToolTipVisible:set(false)
         else
             ToolSlot.Equipped = Tool.Parent == self.Char
         end
@@ -60,7 +66,7 @@ function States:_ToolRemoved(Tool)
     end
 end
 
-function States:_ScanToolDir(ToolDir)
+function States:_ScanToolDir(ToolDir: Instance)
     for _, Child in ipairs(ToolDir:GetChildren()) do
         self:_ToolAdded(Child)
     end
@@ -114,12 +120,19 @@ function States:Init()
     self.DefaultEffectsEnabled = Value(true)
 
     self.ManagementModeEnabled = Value(false)
-    self.CurrentContextActionsSlot = Value()
     self.ToolTipText = Value('')
     self.ToolTipVisible = Value(false)
+
+    self.ContextMenu = Value()
+    self.ContextMenuActions = Computed(function()
+        local ContextMenu = self.ContextMenu:get()
+        return (ContextMenu and ContextMenu.Actions) or {}
+    end)
 
     self.ToolSlots = Value({})
     self.CustomButtons = Value({})
 end
+
+States:Init()
 
 return States

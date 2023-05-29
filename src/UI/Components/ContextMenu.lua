@@ -1,4 +1,4 @@
-local NeoHotbar = script:FindFirstAncestor("NeoHotbar")
+local NeoHotbar = script.Parent.Parent.Parent
 
 local Fusion = require(NeoHotbar.ExtPackages.Fusion)
 local States = require(NeoHotbar.UI.States)
@@ -14,20 +14,20 @@ local Components = NeoHotbar.UI.Components
 local ActionButton = require(Components.ActionButton)
 
 return function()
-    return Hydrate(States.InstanceSet:get().ContextMenu:Clone()) {
-        Visible = Computed(function()
-            local ContextMenuValue = States.ContextMenu:get()
-            return (ContextMenuValue and true) or false
-        end),
+	return Hydrate(States.InstanceSet:get().ContextMenu:Clone())({
+		Visible = Computed(function()
+			local ContextMenuValue = States.ContextMenu:get()
+			return (ContextMenuValue and true) or false
+		end),
 
-        [WithChild "Actions"] = {
-            [Children] = {
-                ForValues(States.ContextMenuActions, function(Action)
-                    return ActionButton {
-                        Action = Action,
-                    }
-                end),
-            }
-        }
-    }
+		[WithChild("Actions")] = {
+			[Children] = {
+				ForValues(States.ContextMenuActions, function(Action)
+					return ActionButton({
+						Action = Action,
+					})
+				end, Fusion.cleanup),
+			},
+		},
+	})
 end

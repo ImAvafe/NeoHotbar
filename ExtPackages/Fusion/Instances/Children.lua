@@ -21,7 +21,7 @@ Children.type = "SpecialKey"
 Children.kind = "Children"
 Children.stage = "descendants"
 
-function Children:apply(propValue: any, applyToRef: PubTypes.SemiWeakRef, cleanupTasks: {PubTypes.Task})
+function Children:apply(propValue: any, applyTo: Instance, cleanupTasks: {PubTypes.Task})
 	local newParented: Set<Instance> = {}
 	local oldParented: Set<Instance> = {}
 
@@ -36,6 +36,9 @@ function Children:apply(propValue: any, applyToRef: PubTypes.SemiWeakRef, cleanu
 	-- to observe for changes; then unparents instances no longer found and
 	-- disconnects observers for state objects no longer present.
 	local function updateChildren()
+		if not updateQueued then
+			return -- this update may have been canceled by destruction, etc.
+		end
 		updateQueued = false
 
 		oldParented, newParented = newParented, oldParented
@@ -54,7 +57,7 @@ function Children:apply(propValue: any, applyToRef: PubTypes.SemiWeakRef, cleanu
 					-- wasn't previously present
 
 					-- TODO: check for ancestry conflicts here
-					child.Parent = applyToRef.instance
+					child.Parent = applyTo
 				else
 					-- previously here; we want to reuse, so remove from old
 					-- set so we don't encounter it during unparenting
@@ -133,10 +136,12 @@ function Children:apply(propValue: any, applyToRef: PubTypes.SemiWeakRef, cleanu
 
 	table.insert(cleanupTasks, function()
 		propValue = nil
+		updateQueued = true
 		updateChildren()
 	end)
 
 	-- perform initial child parenting
+	updateQueued = true
 	updateChildren()
 end
 

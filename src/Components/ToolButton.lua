@@ -1,9 +1,9 @@
-local NeoHotbar = script.Parent.Parent.Parent
+local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
 local Utils = require(NeoHotbar.Utils)
-local States = require(NeoHotbar.UI.States)
+local States = require(NeoHotbar.States)
 local EnsureProp = require(NeoHotbar.EnsureProp)
 
 local Children = Fusion.Children
@@ -13,15 +13,14 @@ local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child
 local Value = Fusion.Value
 
-local Components = NeoHotbar.UI.Components
+local Components = NeoHotbar.Components
 
 local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
-local ContextMenu = require(Components.ContextMenu)
 
 local ToolButtonInstance = States.InstanceSet:get().ToolButton
 
-return function(Props)
+return function(Props: table)
 	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", 1)
 	Props.Equipped = EnsureProp(Props.Equipped, "boolean", false)
 	Props.Tool = EnsureProp(Props.Tool, "Tool", Instance.new("Tool"))
@@ -72,13 +71,21 @@ return function(Props)
 				if Props.Tool:get().TextureId ~= "" then
 					return ButtonImage {
 						Image = Computed(function()
-							return Props.Tool:get().TextureId
+							local Image
+							if Props.Tool:get() then
+								Image = Props.Tool:get().TextureId
+							end
+							return Image or ""
 						end),
 					}
 				else
 					return ButtonText {
 						Text = Computed(function()
-							return Props.Tool:get().Name
+							local Name
+							if Props.Tool:get() then
+								Name = Props.Tool:get().Name
+							end
+							return Name or "Tool"
 						end),
 					}
 				end

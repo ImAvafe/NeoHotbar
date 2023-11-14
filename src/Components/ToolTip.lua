@@ -1,8 +1,8 @@
-local NeoHotbar = script.Parent.Parent.Parent
+local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
-local States = require(NeoHotbar.UI.States)
+local States = require(NeoHotbar.States)
 
 local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child

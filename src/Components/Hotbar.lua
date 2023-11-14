@@ -1,8 +1,9 @@
-local NeoHotbar = script.Parent.Parent.Parent
+local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
-local States = require(NeoHotbar.UI.States)
+local States = require(NeoHotbar.States)
+local EnsureProp = require(NeoHotbar.EnsureProp)
 
 local Computed = Fusion.Computed
 local Children = Fusion.Children
@@ -10,13 +11,15 @@ local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child
 local ForPairs = Fusion.ForPairs
 
-local Components = NeoHotbar.UI.Components
+local Components = NeoHotbar.Components
 
 local ToolButton = require(Components.ToolButton)
 local CustomButton = require(Components.CustomButton)
 local ToolTip = require(Components.ToolTip)
 
-return function(Props)
+return function(Props: table)
+	Props.Parent = EnsureProp(Props.Parent, "Instance", nil)
+
 	local Hotbar = Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,

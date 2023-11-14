@@ -4,10 +4,9 @@ local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
 local VRService = game:GetService("VRService")
 
-local States = require(script.UI.States)
+local States = require(script.States)
 local Utils = require(script.Utils)
-
-local HotbarGui = require(script.UI.Components.Hotbar)
+local HotbarGui = require(script.Components.Hotbar)
 
 local GAMEPAD_SELECTOR_INDEXERS = { Left = -1, Right = 1 }
 
@@ -20,7 +19,7 @@ end
 ]=]
 local NeoHotbar = {
 	_Started = false,
-	_States = script.UI.States,
+	_States = script.States,
 	_Utils = script.Utils,
 }
 

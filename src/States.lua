@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 
-local NeoHotbar = script.Parent.Parent
+local NeoHotbar = script.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 
@@ -11,7 +11,7 @@ local Computed = Fusion.Computed
 local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 
 local States = {
-  InstanceSet = Value(NeoHotbar.UI.DefaultInstances),
+  InstanceSet = Value(NeoHotbar.DefaultInstances),
   DefaultEffectsEnabled = Value(true),
   ManagementModeEnabled = Value(false),
   ToolTipText = Value(''),

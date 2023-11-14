@@ -1,13 +1,16 @@
-local NeoHotbar = script.Parent.Parent.Parent
+local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
-local States = require(NeoHotbar.UI.States)
+local States = require(NeoHotbar.States)
+local EnsureProp = require(NeoHotbar.EnsureProp)
 
 local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child
 
-return function(Props)
+return function(Props: table)
+	Props.Image = EnsureProp(Props.Image, "string", "")
+
 	return Hydrate(States.InstanceSet:get().ButtonImage:Clone()) {
 		[Child "Image"] = {
 			Image = Props.Image

@@ -1,8 +1,9 @@
-local NeoHotbar = script.Parent.Parent.Parent
+local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
-local States = require(NeoHotbar.UI.States)
+local States = require(NeoHotbar.States)
+local EnsureProp = require(NeoHotbar.EnsureProp)
 
 local Hydrate = Fusion.Hydrate
 local OnEvent = Fusion.OnEvent
@@ -10,7 +11,9 @@ local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Child = FusionUtils.Child
 
-return function(Props)
+return function(Props: table)
+	Props.Action = EnsureProp(Props.Action, "table", {})
+
 	local Hovering = Value(false)
 
 	return Hydrate(States.InstanceSet:get().ActionButton:Clone())({
@@ -19,12 +22,21 @@ return function(Props)
 		end),
 
 		[Child("Text")] = {
-			Text = Props.Action.Name,
+			Text = Computed(function()
+				local Name
+				if Props.Action:get() then
+					Name = Props.Action:get().Name
+				end
+				return Name or "Action"
+			end),
 		},
 
 		[OnEvent("Activated")] = function()
 			States.ContextMenu:set()
-			Props.Action:Function()
+
+			if Props.Action:get() and Props.Action:get().Function then
+				Props.Action:get():Function()
+			end
 		end,
 		[OnEvent("MouseEnter")] = function()
 			Hovering:set(true)

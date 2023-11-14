@@ -1,6 +1,6 @@
 local NeoHotbar = script.Parent
 
-local States = require(NeoHotbar.UI.States)
+local States = require(NeoHotbar.States)
 
 local Utils = {}
 

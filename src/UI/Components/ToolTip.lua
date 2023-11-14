@@ -1,10 +1,11 @@
 local NeoHotbar = script.Parent.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
+local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
 local States = require(NeoHotbar.UI.States)
 
 local Hydrate = Fusion.Hydrate
-local WithChild = Fusion.WithChild
+local Child = FusionUtils.Child
 local Computed = Fusion.Computed
 local Spring = Fusion.Spring
 
@@ -17,14 +18,14 @@ return function()
 	local ToolTip = Hydrate(States.InstanceSet:get().ToolTip:Clone())({
 		GroupTransparency = Spring(GroupTransparency, 25, 1),
 
-		[WithChild("Text")] = {
+		[Child("Text")] = {
 			Text = States.ToolTipText,
 		},
 	})
 
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolTip)({
-			[WithChild("Text")] = {
+			[Child("Text")] = {
 				Font = Enum.Font.Gotham,
 			},
 		})

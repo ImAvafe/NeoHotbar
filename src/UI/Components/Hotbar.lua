@@ -1,12 +1,13 @@
 local NeoHotbar = script.Parent.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
+local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
 local States = require(NeoHotbar.UI.States)
 
 local Computed = Fusion.Computed
 local Children = Fusion.Children
 local Hydrate = Fusion.Hydrate
-local WithChild = Fusion.WithChild
+local Child = FusionUtils.Child
 local ForPairs = Fusion.ForPairs
 
 local Components = NeoHotbar.UI.Components
@@ -20,9 +21,9 @@ return function(Props)
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 
-		[WithChild "Hotbar"] = {
-			[WithChild "Buttons"] = {
-				[WithChild "CustomButtons"] = {
+		[Child "Hotbar"] = {
+			[Child "Buttons"] = {
+				[Child "CustomButtons"] = {
 					[Children] = ForPairs(States.CustomButtons, function(ButtonNum, ButtonEntry)
 						return ButtonNum, CustomButton {
 							Icon = ButtonEntry.Icon,
@@ -31,7 +32,7 @@ return function(Props)
 						}
 					end, Fusion.cleanup),
 				},
-				[WithChild "ToolSlots"] = {
+				[Child "ToolSlots"] = {
 					[Children] = ForPairs(States.ToolSlots, function(ToolNum, ToolSlot)
 						return ToolNum, ToolButton {
 							Slot = ToolSlot,
@@ -57,31 +58,31 @@ return function(Props)
 		end)
 
 		Hydrate(Hotbar) {
-			[WithChild "Hotbar"] = {
-				[WithChild "Buttons"] = {
-					[WithChild "ToolSlots"] = {
+			[Child "Hotbar"] = {
+				[Child "Buttons"] = {
+					[Child "ToolSlots"] = {
 						BackgroundTransparency = Computed(function()
 							local ManagementModeEnabled = States.ManagementModeEnabled:get()
 							return (ManagementModeEnabled and 0.75) or 1
 						end),
 
-						[WithChild "UIPadding"] = {
+						[Child "UIPadding"] = {
 							PaddingTop = Padding,
 							PaddingBottom = Padding,
 							PaddingRight = Padding,
 							PaddingLeft = Padding,
 						},
-						[WithChild "UIStroke"] = {
+						[Child "UIStroke"] = {
 							Enabled = States.ManagementModeEnabled,
 						},
 					},
-					[WithChild "CustomButtons"] = {
+					[Child "CustomButtons"] = {
 						Visible = Computed(function()
 							local ManagementModeEnabled = States.ManagementModeEnabled:get()
 							return not ManagementModeEnabled
 						end)
 					},
-					[WithChild "UIListLayout"] = {
+					[Child "UIListLayout"] = {
 						Padding = Computed(function()
 							local ToolSlots = States.ToolSlots:get()
 							local CustomButtons = States.CustomButtons:get()

@@ -1,15 +1,16 @@
 local NeoHotbar = script.Parent.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
+local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
 local Utils = require(NeoHotbar.Utils)
 local States = require(NeoHotbar.UI.States)
-local EnsureProp = require(NeoHotbar.ExtPackages.EnsureProp)
+local EnsureProp = require(NeoHotbar.EnsureProp)
 
 local Children = Fusion.Children
 local Computed = Fusion.Computed
 local OnEvent = Fusion.OnEvent
 local Hydrate = Fusion.Hydrate
-local WithChild = Fusion.WithChild
+local Child = FusionUtils.Child
 local Value = Fusion.Value
 
 local Components = NeoHotbar.UI.Components
@@ -61,7 +62,7 @@ return function(Props)
 			Holding:set(false)
 		end,
 
-		[WithChild("ToolNumber")] = {
+		[Child("ToolNumber")] = {
 			Text = Props.ToolNumber,
 			Font = (States.DefaultEffectsEnabled:get() and Enum.Font.Gotham) or nil,
 		},
@@ -95,7 +96,7 @@ return function(Props)
 
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolButton)({
-			[WithChild("UIStroke")] = {
+			[Child("UIStroke")] = {
 				Enabled = Props.Equipped,
 			},
 		})

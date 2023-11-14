@@ -1,11 +1,12 @@
 local NeoHotbar = script.Parent.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
+local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
 local States = require(NeoHotbar.UI.States)
 
 local Hydrate = Fusion.Hydrate
 local Computed = Fusion.Computed
-local WithChild = Fusion.WithChild
+local Child = FusionUtils.Child
 local Children = Fusion.Children
 local ForValues = Fusion.ForValues
 
@@ -20,7 +21,7 @@ return function()
 			return (ContextMenuValue and true) or false
 		end),
 
-		[WithChild("Actions")] = {
+		[Child("Actions")] = {
 			[Children] = {
 				ForValues(States.ContextMenuActions, function(Action)
 					return ActionButton({

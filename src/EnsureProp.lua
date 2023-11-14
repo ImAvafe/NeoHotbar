@@ -1,4 +1,6 @@
-local Fusion = require(script.Parent.Fusion)
+local NeoHotbar = script.Parent
+
+local Fusion = require(NeoHotbar.Parent.Fusion)
 
 local Value = Fusion.Value
 

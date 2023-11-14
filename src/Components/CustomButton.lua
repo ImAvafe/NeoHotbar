@@ -20,7 +20,11 @@ return function(Props: table)
 	return Hydrate(States.InstanceSet:get().CustomButton:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
-		[OnEvent "Activated"] = Props.Callback,
+		[OnEvent "Activated"] = function()
+			if Props.Callback:get() then
+				Props.Callback:get()()
+			end
+		end,
 
 		[Children] = {
 			ButtonImage {

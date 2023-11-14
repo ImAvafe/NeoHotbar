@@ -143,6 +143,21 @@ function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: bool
 end
 
 --[=[
+  Reset NeoHotbar's UI back to the default.
+]=]
+function NeoHotbar:ResetGui()
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can reset its GUI.")
+		return
+	end
+
+	States.InstanceSet:set(script.DefaultInstances)
+	States.DefaultEffectsEnabled:set(true)
+	self._HotbarGui:Destroy()
+	self:_CreateGui()
+end
+
+--[=[
   Adds a custom button to the hotbar, prepended to the left-most side.
 
   @param ButtonName string -- The name/identifier of the button to be added.
@@ -181,6 +196,15 @@ function NeoHotbar:RemoveCustomButton(ButtonName: string)
 	local CustomButtons = States.CustomButtons:get()
 	table.remove(CustomButtons, table.find(CustomButtons, CustomButton))
 	States.CustomButtons:set(CustomButtons)
+end
+
+--[=[
+  Returns the specified custom button if found.
+
+  @param ButtonName string -- The name of the button to be searched for.
+]=]
+function NeoHotbar:FindCustomButton(ButtonName: string)
+	return States:FindCustomButton(ButtonName)
 end
 
 --[=[

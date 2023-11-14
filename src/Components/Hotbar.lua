@@ -23,6 +23,7 @@ return function(Props: table)
 	local Hotbar = Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
+		Enabled = States.Enabled,
 
 		[Child "Hotbar"] = {
 			[Child "Buttons"] = {

@@ -20,6 +20,7 @@ local States = {
   ContextMenuActions = Value({}),
   ToolSlots = Value({}),
   CustomButtons = Value({}),
+  Enabled = Value(true),
 }
 
 function States:DropTool(Tool: Tool)

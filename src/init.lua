@@ -10,27 +10,27 @@ local HotbarGui = require(script.Components.Hotbar)
 local GAMEPAD_SELECTOR_INDEXERS = { Left = -1, Right = 1 }
 
 if not RunService:IsStudio() then
-	print("NeoHotbar 0.1.0 by Avafe 🌟🛠")
+	print("NeoHotbar by Avafe 🌟🛠")
 end
 
 --[=[
   @class NeoHotbar
 ]=]
 local NeoHotbar = {
-	_Started = false,
-	_States = script.States,
+	Started = false,
+	States = States,
 }
 
 --[=[
   Initializes NeoHotbar and deploys its UI with default settings.
 ]=]
 function NeoHotbar:Start()
-	assert(not self._Started, "NeoHotbar has already been started. It cannot be started again.")
-	self._Started = true
-
-	if VRService.VREnabled then
+	if self.Started then
+		warn("NeoHotbar has already been started. It cannot be started again.")
 		return
 	end
+
+	self.Started = true
 
 	States:Start()
 
@@ -38,10 +38,11 @@ function NeoHotbar:Start()
 	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
 
 	UserInputService.InputEnded:Connect(function(Input)
-		if UserInputService:GetFocusedTextBox() then
-			return
-		end
+		if not States.Enabled:get() then return end
+		if UserInputService:GetFocusedTextBox() then return end
+
 		local ToolSlots = States.ToolSlots:get()
+
 		if Input.UserInputType == Enum.UserInputType.Keyboard then
 			local InputNumber = tonumber(UserInputService:GetStringForKeyCode(Input.KeyCode))
 			if InputNumber then
@@ -56,6 +57,7 @@ function NeoHotbar:Start()
 		elseif Input.UserInputType == Enum.UserInputType.Gamepad1 then
 			local EquippedToolSlot, EquippedToolSlotIndex = States:GetEquippedToolSlot()
 			local SelectorDirection
+
 			if Input.KeyCode == Enum.KeyCode.ButtonL1 then
 				SelectorDirection = "Left"
 			elseif Input.KeyCode == Enum.KeyCode.ButtonR1 then
@@ -63,6 +65,7 @@ function NeoHotbar:Start()
 			else
 				return
 			end
+
 			local ToolSlot
 			if EquippedToolSlot then
 				local ToolSlotIndex = EquippedToolSlotIndex + GAMEPAD_SELECTOR_INDEXERS[SelectorDirection]
@@ -77,25 +80,45 @@ function NeoHotbar:Start()
 					end
 				end
 			end
+
 			States:ToggleToolEquipped(ToolSlot.Tool:get())
 		elseif
 			Input.UserInputType == Enum.UserInputType.MouseButton1
 			or Input.UserInputType == Enum.UserInputType.Touch
 		then
-			local InteractedGuiObjects =
-				Players.LocalPlayer.PlayerGui:GetGuiObjectsAtPosition(Input.Position.X, Input.Position.Y)
+			local InteractedGuiObjects = Players.LocalPlayer.PlayerGui:GetGuiObjectsAtPosition(Input.Position.X, Input.Position.Y)
+			
 			local GuiWithinToolSlots
 			for _, GuiObject in ipairs(InteractedGuiObjects) do
 				if GuiObject:FindFirstAncestor("Hotbar") then
 					GuiWithinToolSlots = true
 				end
 			end
+
 			if not GuiWithinToolSlots then
 				States.ManagementModeEnabled:set(false)
 				States.ContextMenu:set()
 			end
 		end
 	end)
+
+	if VRService.VREnabled then
+		self:SetEnabled(false)
+	end
+end
+
+--[=[
+  Sets whether NeoHotbar is enabled or not. Disabling hides the hotbar and turns off functionality.
+
+  @param Enabled -- Whether or not to enable NeoHotbar.
+]=]
+function NeoHotbar:SetEnabled(Enabled: boolean)
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if it's enabled or not.")
+		return
+	end
+
+	States.Enabled:set(Enabled)
 end
 
 --[=[
@@ -103,9 +126,15 @@ end
 
   @param CustomGuiSet -- The parent folder containing your custom Gui objects.
 ]=]
-function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: any)
-	assert(self._Started, "NeoHotbar needs to be started before you can override its GUI!")
-	DefaultEffectsEnabled = (DefaultEffectsEnabled == nil and false) or DefaultEffectsEnabled
+function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: boolean|nil)
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can override its GUI.")
+		return
+	end
+
+	if DefaultEffectsEnabled == nil then
+		DefaultEffectsEnabled = false
+	end
 
 	States.InstanceSet:set(CustomGuiSet)
 	States.DefaultEffectsEnabled:set(DefaultEffectsEnabled)
@@ -121,7 +150,10 @@ end
   @param Callback function -- The function called upon button activation (click/touch/etc).
 ]=]
 function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any)
-	assert(self._Started, "NeoHotbar needs to be started before you can add custom buttons!")
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can add or remove custom buttons.")
+		return
+	end
 
 	local CustomButtons = States.CustomButtons:get()
 	table.insert(CustomButtons, {
@@ -138,7 +170,10 @@ end
   @param ButtonName string -- The name of the button to be removed.
 ]=]
 function NeoHotbar:RemoveCustomButton(ButtonName: string)
-	assert(self._Started, "NeoHotbar needs to be started before you can remove custom buttons!")
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can add or remove custom buttons.")
+		return
+	end
 
 	local CustomButton = States:FindCustomButton(ButtonName)
 	assert(CustomButton, 'Custom button "' .. ButtonName .. '" could not be found.')

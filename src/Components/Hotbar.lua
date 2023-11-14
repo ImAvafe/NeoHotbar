@@ -57,7 +57,7 @@ return function(Props: table)
 	if States.DefaultEffectsEnabled:get() then
 		local Padding = Computed(function()
 			local ManagementModeEnabled = States.ManagementModeEnabled:get()
-			return UDim.new(0, (ManagementModeEnabled and 5) or 0)
+			return UDim.new(0, (ManagementModeEnabled and 4) or 0)
 		end)
 
 		Hydrate(Hotbar) {
@@ -66,7 +66,7 @@ return function(Props: table)
 					[Child "ToolSlots"] = {
 						BackgroundTransparency = Computed(function()
 							local ManagementModeEnabled = States.ManagementModeEnabled:get()
-							return (ManagementModeEnabled and 0.75) or 1
+							return (ManagementModeEnabled and 0.8) or 1
 						end),
 
 						[Child "UIPadding"] = {

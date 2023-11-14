@@ -1,4 +1,4 @@
-local NeoHotbar = script:FindFirstAncestor("NeoHotbar")
+local NeoHotbar = script.Parent
 
 local States = require(NeoHotbar.UI.States)
 

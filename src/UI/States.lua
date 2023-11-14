@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 
 local NeoHotbar = script.Parent.Parent
 
-local Fusion = require(NeoHotbar.ExtPackages.Fusion)
+local Fusion = require(NeoHotbar.Parent.Fusion)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer

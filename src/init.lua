@@ -5,7 +5,6 @@ local UserInputService = game:GetService("UserInputService")
 local VRService = game:GetService("VRService")
 
 local States = require(script.States)
-local Utils = require(script.Utils)
 local HotbarGui = require(script.Components.Hotbar)
 
 local GAMEPAD_SELECTOR_INDEXERS = { Left = -1, Right = 1 }
@@ -20,7 +19,6 @@ end
 local NeoHotbar = {
 	_Started = false,
 	_States = script.States,
-	_Utils = script.Utils,
 }
 
 --[=[
@@ -49,14 +47,14 @@ function NeoHotbar:Start()
 			if InputNumber then
 				local ToolSlot = ToolSlots[InputNumber]
 				if ToolSlot then
-					Utils:ToggleToolEquipped(ToolSlot.Tool:get())
+					States:ToggleToolEquipped(ToolSlot.Tool:get())
 				end
 				States.ManagementModeEnabled:set(false)
 			elseif Input.KeyCode == Enum.KeyCode.Backquote then
 				States.ManagementModeEnabled:set(not States.ManagementModeEnabled:get())
 			end
 		elseif Input.UserInputType == Enum.UserInputType.Gamepad1 then
-			local EquippedToolSlot, EquippedToolSlotIndex = Utils:GetEquippedToolSlot()
+			local EquippedToolSlot, EquippedToolSlotIndex = States:GetEquippedToolSlot()
 			local SelectorDirection
 			if Input.KeyCode == Enum.KeyCode.ButtonL1 then
 				SelectorDirection = "Left"
@@ -79,7 +77,7 @@ function NeoHotbar:Start()
 					end
 				end
 			end
-			Utils:ToggleToolEquipped(ToolSlot.Tool:get())
+			States:ToggleToolEquipped(ToolSlot.Tool:get())
 		elseif
 			Input.UserInputType == Enum.UserInputType.MouseButton1
 			or Input.UserInputType == Enum.UserInputType.Touch
@@ -142,7 +140,7 @@ end
 function NeoHotbar:RemoveCustomButton(ButtonName: string)
 	assert(self._Started, "NeoHotbar needs to be started before you can remove custom buttons!")
 
-	local CustomButton = Utils:FindCustomButton(ButtonName)
+	local CustomButton = States:FindCustomButton(ButtonName)
 	assert(CustomButton, 'Custom button "' .. ButtonName .. '" could not be found.')
 
 	local CustomButtons = States.CustomButtons:get()

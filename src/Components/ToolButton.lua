@@ -2,9 +2,8 @@ local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
-local Utils = require(NeoHotbar.Utils)
 local States = require(NeoHotbar.States)
-local EnsureProp = require(NeoHotbar.EnsureProp)
+local EnsureProp = require(NeoHotbar.ExtPackages.EnsureProp)
 
 local Children = Fusion.Children
 local Computed = Fusion.Computed
@@ -34,13 +33,13 @@ return function(Props: table)
 
 		[OnEvent("Activated")] = function()
 			if not States.ManagementModeEnabled:get() then
-				Utils:ToggleToolEquipped(Props.Tool:get())
+				States:ToggleToolEquipped(Props.Tool:get())
 			else
-				Utils:SetContextMenuToSlot(ToolButton, Props.Tool:get())
+				States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 			end
 		end,
 		[OnEvent("MouseButton2Click")] = function()
-			Utils:SetContextMenuToSlot(ToolButton, Props.Tool:get())
+			States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 		end,
 		[OnEvent("MouseButton1Down")] = function()
 			Holding:set(true)
@@ -51,7 +50,7 @@ return function(Props: table)
 				States.HotbarHoldProcess = task.delay(0.2, function()
 					if Holding:get() == true then
 						States.ManagementModeEnabled:set(true)
-						Utils:SetContextMenuToSlot(ToolButton, Props.Tool:get())
+						States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 						States.ToolTipVisible:set(false)
 					end
 				end)

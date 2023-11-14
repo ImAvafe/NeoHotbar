@@ -1,4 +1,4 @@
-local NeoHotbar = script.Parent
+local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
 

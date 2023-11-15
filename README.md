@@ -11,8 +11,8 @@
 </p>
 
 <p align="center">
-  <img alt="Platforms" src="https://img.shields.io/badge/compatibility-%F0%9F%92%BB%20%F0%9F%93%B1%20%F0%9F%8E%AE-green"></img>
-  <img alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
+  <img title="PC, Mobile, Console & VR" alt="Platforms" src="https://img.shields.io/badge/compatibility-💻_📱_🎮_🥽-2ea44f"></img>
+  <img title="MIT licensed" alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
 </p>
 
 ## Installation 📦

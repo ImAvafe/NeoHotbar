@@ -1,18 +1,6 @@
 {
-  "name": "NeoHotbar",
-  
-  "tree": {
-    "$className": "DataModel",
-
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-    
-      "NeoHotbar": {
-        "$path": "src",
-        "ExtPackages": {
-          "$path": "ExtPackages"
-        }
-      }
-    }
-  }
+	"name": "NeoHotbar",
+	"tree": {
+		"$path": "src"
+	}
 }

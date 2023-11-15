@@ -1,0 +1,20 @@
+{
+	"name": "NeoHotbar",
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+      "NeoHotbar": {
+        "$path": "StandaloneBundler.lua",
+        "Packages": {
+          "$path": "Packages",
+          "$ignoreUnknownInstances": true,
+          "NeoHotbar": {
+            "$path": "default.project.json",
+            "$ignoreUnknownInstances": true
+          }
+        }
+      }
+		}
+	}
+}

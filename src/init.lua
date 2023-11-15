@@ -121,6 +121,9 @@ function NeoHotbar:SetEnabled(Enabled: boolean)
 	end
 
 	States.Enabled:set(Enabled)
+
+	States.ManagementMode.Active:set(false)
+	States.ContextMenu.Active:set(false)
 end
 
 --[=[

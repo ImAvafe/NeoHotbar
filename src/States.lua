@@ -6,28 +6,30 @@ local Fusion = require(NeoHotbar.Parent.Fusion)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer
-local Computed = Fusion.Computed
 
 local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 
 local States = {
+  Enabled = Value(true),
   InstanceSet = Value(NeoHotbar.DefaultInstances),
   DefaultEffectsEnabled = Value(true),
   ManagementMode = {
-    Enabled = Value(false)
+    Enabled = Value(true),
+    Active = Value(false),
   },
   ToolTip = {
+    Enabled = Value(true),
     Visible = Value(false),
     Text = Value(''),
   },
   ContextMenu = {
+    Enabled = Value(true),
     Active = Value(false),
     GuiObject = Value(),
     Actions = Value()
   },
   ToolSlots = Value({}),
   CustomButtons = Value({}),
-  Enabled = Value(true),
 }
 
 function States:DropTool(Tool: Tool)
@@ -47,7 +49,7 @@ function States:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
   if typeof(ToolButton) ~= "Instance" then return end
   if typeof(Tool) ~= "Instance" then return end
   if not Tool:IsA("Tool") then return end
-
+  
   local Actions = {}
   if Tool.CanBeDropped then
     table.insert(Actions, {
@@ -60,8 +62,10 @@ function States:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
   self.ContextMenu.Actions:set(Actions)
 
   if #Actions >= 1 then
-    self.ContextMenu.GuiObject:set(ToolButton)
-    self.ContextMenu.Active:set(true)
+    if self.ContextMenu.Enabled:get() then
+      self.ContextMenu.GuiObject:set(ToolButton)
+      self.ContextMenu.Active:set(true)
+    end
   else
     self.ContextMenu.GuiObject:set(nil)
     self.ContextMenu.Active:set(false)
@@ -113,10 +117,10 @@ function States:_ToolAdded(Tool: Tool)
     end
     self.ToolSlots:set(NewToolSlots)
 
-    if ToolSlot.Equipped:get() and not self.ManagementMode.Enabled:get() then
+    if ToolSlot.Equipped:get() and not self.ManagementMode.Active:get() then
       if utf8.len(Tool.ToolTip) >= 1 then
         self.ToolTip.Text:set(Tool.ToolTip)
-        self.ToolTip.Visible:set(true)
+        self.ToolTip.Visible:set(States.ToolTip.Enabled:get() and true)
         if self.ToolTipProcess then
           task.cancel(self.ToolTipProcess)
         end
@@ -186,8 +190,8 @@ function States:Start()
     self:_CharacterAdded(ExistingCharacter)
   end
 
-  Observer(self.ManagementMode.Enabled):onChange(function()
-    if self.ManagementMode.Enabled:get() then
+  Observer(self.ManagementMode.Active):onChange(function()
+    if self.ManagementMode.Active:get() then
       if self.Humanoid then
         self.Humanoid:UnequipTools()
       end

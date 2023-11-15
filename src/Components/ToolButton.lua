@@ -31,7 +31,7 @@ return function(Props: table)
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent("Activated")] = function()
-			if not States.ManagementMode.Enabled:get() then
+			if not States.ManagementMode.Active:get() then
 				States:ToggleToolEquipped(Props.Tool:get())
 			end
 		end,
@@ -41,13 +41,13 @@ return function(Props: table)
 		[OnEvent("MouseButton1Down")] = function()
 			Holding:set(true)
 
-			if not States.ManagementMode.Enabled:get() then
+			if not States.ManagementMode.Active:get() then
 				if States.HotbarHoldProcess then
 					task.cancel(States.HotbarHoldProcess)
 				end
-				States.HotbarHoldProcess = task.delay(0.3, function()
+				States.HotbarHoldProcess = task.delay(0.25, function()
 					if Holding:get() == true then
-						States.ManagementMode.Enabled:set(true)
+						States.ManagementMode.Active:set(States.ManagementMode.Enabled:get() and true)
 						States.ToolTip.Visible:set(false)
 					end
 				end)
@@ -88,9 +88,10 @@ return function(Props: table)
 					}
 				end
 			end, Fusion.cleanup),
+
 			Computed(function()
 				if States.ContextMenu.Active:get() and States.ContextMenu.GuiObject:get() == ToolButton then
-					return ContextMenu({})
+					return ContextMenu {}
 				else
 					return {}
 				end

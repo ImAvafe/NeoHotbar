@@ -51,9 +51,11 @@ function NeoHotbar:Start()
 				if ToolSlot then
 					States:ToggleToolEquipped(ToolSlot.Tool:get())
 				end
-				States.ManagementMode.Enabled:set(false)
+				States.ManagementMode.Active:set(false)
 			elseif Input.KeyCode == Enum.KeyCode.Backquote then
-				States.ManagementMode.Enabled:set(not States.ManagementMode.Enabled:get())
+				if States.ManagementMode.Enabled:get() then
+					States.ManagementMode.Active:set(not States.ManagementMode.Active:get())
+				end
 			end
 		elseif Input.UserInputType == Enum.UserInputType.Gamepad1 then
 			local EquippedToolSlot, EquippedToolSlotIndex = States:GetEquippedToolSlot()
@@ -71,9 +73,6 @@ function NeoHotbar:Start()
 			if EquippedToolSlot then
 				local ToolSlotIndex = EquippedToolSlotIndex + GAMEPAD_SELECTOR_INDEXERS[SelectorDirection]
 				ToolSlot = ToolSlots[ToolSlotIndex]
-				print(EquippedToolSlotIndex)
-				-- print(ToolSlot, ToolSlotIndex)
-				-- print(ToolSlots)
 				ToolSlot = ToolSlot or EquippedToolSlot -- Set equipped tool to be unequipped if reached end
 			else
 				if not ToolSlot then -- For default / wrapover selection based on direction
@@ -86,7 +85,7 @@ function NeoHotbar:Start()
 			end
 
 			States:ToggleToolEquipped(ToolSlot.Tool:get())
-			States.ManagementMode.Enabled:set(false)
+			States.ManagementMode.Active:set(false)
 		elseif
 			Input.UserInputType == Enum.UserInputType.MouseButton1
 			or Input.UserInputType == Enum.UserInputType.Touch
@@ -101,7 +100,7 @@ function NeoHotbar:Start()
 			end
 
 			if not GuiWithinToolSlots then
-				States.ManagementMode.Enabled:set(false)
+				States.ManagementMode.Active:set(false)
 				States.ContextMenu.Active:set(false)
 			end
 		end
@@ -122,6 +121,54 @@ function NeoHotbar:SetEnabled(Enabled: boolean)
 	end
 
 	States.Enabled:set(Enabled)
+end
+
+--[=[
+  Sets whether ToolTips are enabled or not.
+
+  @param Enabled -- Whether or not to enable.
+]=]
+function NeoHotbar:SetToolTipsEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if ToolTips are enabled or not.")
+		return
+	end
+
+	States.ToolTip.Enabled:set(Enabled)
+end
+
+--[=[
+  Sets whether players can manage their hotbar slots.
+
+  @param Enabled -- Whether or not to enable.
+]=]
+function NeoHotbar:SetManagementEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if hotbar management is enabled.")
+		return
+	end
+
+	States.ManagementMode.Enabled:set(Enabled)
+end
+
+--[=[
+  Sets whether the context menu is enabled or not. (the popup menu that contains drop button)
+
+  @param Enabled -- Whether or not to enable.
+]=]
+function NeoHotbar:SetContextMenuEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if the context menu is enabled or not.")
+		return
+	end
+
+	States.ContextMenu.Enabled:set(Enabled)
 end
 
 --[=[

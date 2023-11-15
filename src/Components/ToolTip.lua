@@ -11,8 +11,8 @@ local Spring = Fusion.Spring
 
 return function()
 	local GroupTransparency = Computed(function()
-		local ToolTipVisible = States.ToolTip.Visible:get()
-		return (ToolTipVisible and 0) or 1
+		local Visible = States.ToolTip.Enabled:get() and States.ToolTip.Visible:get()
+		return (Visible and 0) or 1
 	end)
 
 	local ToolTip = Hydrate(States.InstanceSet:get().ToolTip:Clone())({

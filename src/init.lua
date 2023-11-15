@@ -1,3 +1,4 @@
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
@@ -50,9 +51,9 @@ function NeoHotbar:Start()
 				if ToolSlot then
 					States:ToggleToolEquipped(ToolSlot.Tool:get())
 				end
-				States.ManagementModeEnabled:set(false)
+				States.ManagementMode.Enabled:set(false)
 			elseif Input.KeyCode == Enum.KeyCode.Backquote then
-				States.ManagementModeEnabled:set(not States.ManagementModeEnabled:get())
+				States.ManagementMode.Enabled:set(not States.ManagementMode.Enabled:get())
 			end
 		elseif Input.UserInputType == Enum.UserInputType.Gamepad1 then
 			local EquippedToolSlot, EquippedToolSlotIndex = States:GetEquippedToolSlot()
@@ -70,18 +71,22 @@ function NeoHotbar:Start()
 			if EquippedToolSlot then
 				local ToolSlotIndex = EquippedToolSlotIndex + GAMEPAD_SELECTOR_INDEXERS[SelectorDirection]
 				ToolSlot = ToolSlots[ToolSlotIndex]
+				print(EquippedToolSlotIndex)
+				-- print(ToolSlot, ToolSlotIndex)
+				-- print(ToolSlots)
 				ToolSlot = ToolSlot or EquippedToolSlot -- Set equipped tool to be unequipped if reached end
 			else
 				if not ToolSlot then -- For default / wrapover selection based on direction
 					if SelectorDirection == "Left" then
 						ToolSlot = ToolSlots[#ToolSlots]
-					else
+					elseif SelectorDirection == "Right" then
 						ToolSlot = ToolSlots[1]
 					end
 				end
 			end
 
 			States:ToggleToolEquipped(ToolSlot.Tool:get())
+			States.ManagementMode.Enabled:set(false)
 		elseif
 			Input.UserInputType == Enum.UserInputType.MouseButton1
 			or Input.UserInputType == Enum.UserInputType.Touch
@@ -96,8 +101,8 @@ function NeoHotbar:Start()
 			end
 
 			if not GuiWithinToolSlots then
-				States.ManagementModeEnabled:set(false)
-				States.ContextMenu:set()
+				States.ManagementMode.Enabled:set(false)
+				States.ContextMenu.Active:set(false)
 			end
 		end
 	end)

@@ -13,11 +13,18 @@ local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 local States = {
   InstanceSet = Value(NeoHotbar.DefaultInstances),
   DefaultEffectsEnabled = Value(true),
-  ManagementModeEnabled = Value(false),
-  ToolTipText = Value(''),
-  ToolTipVisible = Value(false),
-  ContextMenu = Value(),
-  ContextMenuActions = Value({}),
+  ManagementMode = {
+    Enabled = Value(false)
+  },
+  ToolTip = {
+    Visible = Value(false),
+    Text = Value(''),
+  },
+  ContextMenu = {
+    Active = Value(false),
+    GuiObject = Value(),
+    Actions = Value()
+  },
   ToolSlots = Value({}),
   CustomButtons = Value({}),
   Enabled = Value(true),
@@ -37,18 +44,36 @@ function States:ToggleToolEquipped(Tool: Tool)
 end
 
 function States:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
-  self.ContextMenu:set({GuiObject = ToolButton, Actions = {
-      {Name = "Drop Item", Disabled = not Tool.CanBeDropped, Function = function()
-          States:DropTool(Tool)
-      end}
-  }})
-  self.ToolTipVisible:set(false)
+  if typeof(ToolButton) ~= "Instance" then return end
+  if typeof(Tool) ~= "Instance" then return end
+  if not Tool:IsA("Tool") then return end
+
+  local Actions = {}
+  if Tool.CanBeDropped then
+    table.insert(Actions, {
+      Name = "Drop",
+      Function = function()
+        States:DropTool(Tool)
+      end
+    })
+  end
+  self.ContextMenu.Actions:set(Actions)
+
+  if #Actions >= 1 then
+    self.ContextMenu.GuiObject:set(ToolButton)
+    self.ContextMenu.Active:set(true)
+  else
+    self.ContextMenu.GuiObject:set(nil)
+    self.ContextMenu.Active:set(false)
+  end
+
+  self.ToolTip.Visible:set(false)
 end
 
 function States:GetEquippedToolSlot()
   local ToolSlots = self.ToolSlots:get()
   for _, ToolSlot in ipairs(ToolSlots) do
-      if ToolSlot.Equipped then
+      if ToolSlot.Equipped:get() then
           local Index = table.find(ToolSlots, ToolSlot)
           return ToolSlot, Index
       end
@@ -88,18 +113,18 @@ function States:_ToolAdded(Tool: Tool)
     end
     self.ToolSlots:set(NewToolSlots)
 
-    if ToolSlot.Equipped:get() and not self.ManagementModeEnabled:get() then
-      if string.len(Tool.ToolTip) >= 1 then
-        self.ToolTipText:set(Tool.ToolTip)
-        self.ToolTipVisible:set(true)
+    if ToolSlot.Equipped:get() and not self.ManagementMode.Enabled:get() then
+      if utf8.len(Tool.ToolTip) >= 1 then
+        self.ToolTip.Text:set(Tool.ToolTip)
+        self.ToolTip.Visible:set(true)
         if self.ToolTipProcess then
           task.cancel(self.ToolTipProcess)
         end
         self.ToolTipProcess = task.delay(2, function()
-          self.ToolTipVisible:set(false)
+          self.ToolTip.Visible:set(false)
         end)
       else
-        self.ToolTipVisible:set(false)
+        self.ToolTip.Visible:set(false)
       end
     end
   end
@@ -112,7 +137,7 @@ function States:_ToolRemoved(Tool: Tool)
   if ToolSlot then
     if Tool.Parent ~= self.Backpack and Tool.Parent ~= self.Char then
       table.remove(NewToolSlots, ToolNum)
-      self.ToolTipVisible:set(false)
+      self.ToolTip.Visible:set(false)
     else
       ToolSlot.Equipped:set(Tool.Parent == self.Char)
     end
@@ -153,23 +178,19 @@ end
 function States:Start()
   self.Backpack = Players.LocalPlayer:WaitForChild("Backpack")
 
-  self.ContextMenuActions = Computed(function()
-    local ContextMenu = self.ContextMenu:get()
-    return (ContextMenu and ContextMenu.Actions) or {}
-  end)
-
   Players.LocalPlayer.CharacterAdded:Connect(function(Char)
       self:_CharacterAdded(Char)
   end)
-  local Char = Players.LocalPlayer.Character
-  if Char then
-    self:_CharacterAdded(Char)
+  local ExistingCharacter = Players.LocalPlayer.Character
+  if ExistingCharacter then
+    self:_CharacterAdded(ExistingCharacter)
   end
 
-  Observer(self.ManagementModeEnabled):onChange(function()
-    local ManagementModeEnabled = self.ManagementModeEnabled:get()
-    if ManagementModeEnabled then
-      self.Humanoid:UnequipTools()
+  Observer(self.ManagementMode.Enabled):onChange(function()
+    if self.ManagementMode.Enabled:get() then
+      if self.Humanoid then
+        self.Humanoid:UnequipTools()
+      end
     end
   end)
 end

@@ -57,7 +57,7 @@ return function(Props: table)
 
 	if States.DefaultEffectsEnabled:get() then
 		local Padding = Computed(function()
-			local ManagementModeEnabled = States.ManagementModeEnabled:get()
+			local ManagementModeEnabled = States.ManagementMode.Enabled:get()
 			return UDim.new(0, (ManagementModeEnabled and 4) or 0)
 		end)
 
@@ -66,7 +66,7 @@ return function(Props: table)
 				[Child "Buttons"] = {
 					[Child "ToolSlots"] = {
 						BackgroundTransparency = Computed(function()
-							local ManagementModeEnabled = States.ManagementModeEnabled:get()
+							local ManagementModeEnabled = States.ManagementMode.Enabled:get()
 							return (ManagementModeEnabled and 0.8) or 1
 						end),
 
@@ -77,12 +77,12 @@ return function(Props: table)
 							PaddingLeft = Padding,
 						},
 						[Child "UIStroke"] = {
-							Enabled = States.ManagementModeEnabled,
+							Enabled = States.ManagementMode.Enabled,
 						},
 					},
 					[Child "CustomButtons"] = {
 						Visible = Computed(function()
-							local ManagementModeEnabled = States.ManagementModeEnabled:get()
+							local ManagementModeEnabled = States.ManagementMode.Enabled:get()
 							return not ManagementModeEnabled
 						end)
 					},

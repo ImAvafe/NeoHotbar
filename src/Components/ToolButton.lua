@@ -16,6 +16,7 @@ local Components = NeoHotbar.Components
 
 local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
+local ContextMenu = require(Components.ContextMenu)
 
 local ToolButtonInstance = States.InstanceSet:get().ToolButton
 
@@ -32,10 +33,8 @@ return function(Props: table)
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent("Activated")] = function()
-			if not States.ManagementModeEnabled:get() then
+			if not States.ManagementMode.Enabled:get() then
 				States:ToggleToolEquipped(Props.Tool:get())
-			else
-				States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 			end
 		end,
 		[OnEvent("MouseButton2Click")] = function()
@@ -43,24 +42,26 @@ return function(Props: table)
 		end,
 		[OnEvent("MouseButton1Down")] = function()
 			Holding:set(true)
-			if not States.ManagementModeEnabled:get() then
+
+			if not States.ManagementMode.Enabled:get() then
 				if States.HotbarHoldProcess then
 					task.cancel(States.HotbarHoldProcess)
 				end
-				States.HotbarHoldProcess = task.delay(0.2, function()
+				States.HotbarHoldProcess = task.delay(0.3, function()
 					if Holding:get() == true then
-						States.ManagementModeEnabled:set(true)
-						States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
-						States.ToolTipVisible:set(false)
+						States.ManagementMode.Enabled:set(true)
+						States.ToolTip.Visible:set(false)
 					end
 				end)
+			else
+				States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 			end
 		end,
 		[OnEvent("MouseButton1Up")] = function()
 			Holding:set(false)
 		end,
 
-		[Child("ToolNumber")] = {
+		[Child "ToolNumber"] = {
 			Text = Props.ToolNumber,
 			Font = (States.DefaultEffectsEnabled:get() and Enum.Font.Gotham) or nil,
 		},
@@ -89,20 +90,19 @@ return function(Props: table)
 					}
 				end
 			end, Fusion.cleanup),
-			-- Computed(function()
-			-- 	local ContextMenuValue = States.ContextMenu:get()
-			-- 	if ContextMenuValue.GuiObject == ToolButton then
-			-- 		return ContextMenu({})
-			-- 	else
-			-- 		return {}
-			-- 	end
-			-- end, Fusion.cleanup),
+			Computed(function()
+				if States.ContextMenu.Active:get() and States.ContextMenu.GuiObject:get() == ToolButton then
+					return ContextMenu({})
+				else
+					return {}
+				end
+			end, Fusion.cleanup),
 		}
 	})
 
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolButton)({
-			[Child("UIStroke")] = {
+			[Child "UIStroke"] = {
 				Enabled = Props.Equipped,
 			},
 		})

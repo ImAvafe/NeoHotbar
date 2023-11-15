@@ -11,21 +11,21 @@ local Spring = Fusion.Spring
 
 return function()
 	local GroupTransparency = Computed(function()
-		local ToolTipVisible = States.ToolTipVisible:get()
+		local ToolTipVisible = States.ToolTip.Visible:get()
 		return (ToolTipVisible and 0) or 1
 	end)
 
 	local ToolTip = Hydrate(States.InstanceSet:get().ToolTip:Clone())({
 		GroupTransparency = Spring(GroupTransparency, 25, 1),
 
-		[Child("Text")] = {
-			Text = States.ToolTipText,
+		[Child "Text"] = {
+			Text = States.ToolTip.Text,
 		},
 	})
 
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolTip)({
-			[Child("Text")] = {
+			[Child "Text"] = {
 				Font = Enum.Font.Gotham,
 			},
 		})

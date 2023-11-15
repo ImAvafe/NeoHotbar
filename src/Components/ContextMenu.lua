@@ -11,20 +11,16 @@ local Children = Fusion.Children
 local ForValues = Fusion.ForValues
 
 local Components = NeoHotbar.Components
-
-local ActionButton = require(Components.ActionButton)
+local ContextActionButton = require(Components.ContextActionButton)
 
 return function()
 	return Hydrate(States.InstanceSet:get().ContextMenu:Clone())({
-		Visible = Computed(function()
-			local ContextMenuValue = States.ContextMenu:get()
-			return (ContextMenuValue and true) or false
-		end),
+		Visible = States.ContextMenu.Active,
 
-		[Child("Actions")] = {
+		[Child "Actions"] = {
 			[Children] = {
-				ForValues(States.ContextMenuActions, function(Action)
-					return ActionButton({
+				ForValues(States.ContextMenu.Actions, function(Action)
+					return ContextActionButton({
 						Action = Action,
 					})
 				end, Fusion.cleanup),

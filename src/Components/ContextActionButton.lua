@@ -18,10 +18,10 @@ return function(Props: table)
 
 	return Hydrate(States.InstanceSet:get().ActionButton:Clone())({
 		BackgroundTransparency = Computed(function()
-			return (Hovering:get() and 0.95) or 1
+			return (Hovering:get() and 0.975) or 1
 		end),
 
-		[Child("Text")] = {
+		[Child "Text"] = {
 			Text = Computed(function()
 				local Name
 				if Props.Action:get() then
@@ -32,7 +32,7 @@ return function(Props: table)
 		},
 
 		[OnEvent("Activated")] = function()
-			States.ContextMenu:set()
+			States.ContextMenu.Active:set(false)
 
 			if Props.Action:get() and Props.Action:get().Function then
 				Props.Action:get():Function()

@@ -106,10 +106,6 @@ function NeoHotbar:Start()
 			end
 		end
 	end)
-
-	if VRService.VREnabled then
-		self:SetEnabled(false)
-	end
 end
 
 --[=[

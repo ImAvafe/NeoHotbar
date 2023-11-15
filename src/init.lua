@@ -114,6 +114,8 @@ end
   @param Enabled -- Whether or not to enable NeoHotbar.
 ]=]
 function NeoHotbar:SetEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
 	if not self.Started then
 		warn("NeoHotbar needs to be started before you can change if it's enabled or not.")
 		return
@@ -127,12 +129,15 @@ end
 
   @param CustomGuiSet -- The parent folder containing your custom Gui objects.
 ]=]
-function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: boolean|nil)
+function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: boolean?)
+	if typeof(CustomGuiSet) ~= "Instance" then return end
+	if typeof(DefaultEffectsEnabled) ~= "boolean" then return end
+
 	if not self.Started then
 		warn("NeoHotbar needs to be started before you can override its GUI.")
 		return
 	end
-
+	
 	if DefaultEffectsEnabled == nil then
 		DefaultEffectsEnabled = false
 	end
@@ -166,6 +171,9 @@ end
   @param Callback function -- The function called upon button activation (click/touch/etc).
 ]=]
 function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any)
+	if typeof(ButtonName) ~= "string" then return end
+	if typeof(IconImage) ~= "string" then return end
+
 	if not self.Started then
 		warn("NeoHotbar needs to be started before you can add or remove custom buttons.")
 		return
@@ -186,6 +194,8 @@ end
   @param ButtonName string -- The name of the button to be removed.
 ]=]
 function NeoHotbar:RemoveCustomButton(ButtonName: string)
+	if typeof(ButtonName) ~= "string" then return end
+
 	if not self.Started then
 		warn("NeoHotbar needs to be started before you can add or remove custom buttons.")
 		return
@@ -205,6 +215,8 @@ end
   @param ButtonName string -- The name of the button to be searched for.
 ]=]
 function NeoHotbar:FindCustomButton(ButtonName: string)
+	if typeof(ButtonName) ~= "string" then return end
+
 	return States:FindCustomButton(ButtonName)
 end
 

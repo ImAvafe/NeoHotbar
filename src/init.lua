@@ -131,7 +131,6 @@ end
 ]=]
 function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: boolean?)
 	if typeof(CustomGuiSet) ~= "Instance" then return end
-	if typeof(DefaultEffectsEnabled) ~= "boolean" then return end
 
 	if not self.Started then
 		warn("NeoHotbar needs to be started before you can override its GUI.")

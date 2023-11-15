@@ -18,8 +18,6 @@ local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
 local ContextMenu = require(Components.ContextMenu)
 
-local ToolButtonInstance = States.InstanceSet:get().ToolButton
-
 return function(Props: table)
 	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", 1)
 	Props.Equipped = EnsureProp(Props.Equipped, "boolean", false)
@@ -29,7 +27,7 @@ return function(Props: table)
 	local Holding = Value(false)
 
 	local ToolButton
-	ToolButton = Hydrate(ToolButtonInstance:Clone())({
+	ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone())({
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent("Activated")] = function()

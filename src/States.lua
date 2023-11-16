@@ -7,8 +7,6 @@ local Fusion = require(NeoHotbar.Parent.Fusion)
 local Value = Fusion.Value
 local Observer = Fusion.Observer
 
-local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
-
 local States = {
   Enabled = Value(true),
   InstanceSet = Value(NeoHotbar.DefaultInstances),
@@ -16,6 +14,10 @@ local States = {
   ManagementMode = {
     Enabled = Value(true),
     Active = Value(false),
+    Swapping = {
+      PrimarySlot = Value(),
+      SecondarySlot = Value(),
+    },
   },
   ToolTip = {
     Enabled = Value(true),
@@ -43,6 +45,26 @@ function States:ToggleToolEquipped(Tool: Tool)
   else
       States.Humanoid:UnequipTools()
   end
+end
+
+function States:SwapToolSlots(SlotIndex1: number, SlotIndex2: number)
+  local ToolSlots = States.ToolSlots:get()
+  local ToolSlot1, ToolSlot2 = ToolSlots[SlotIndex1], ToolSlots[SlotIndex2]
+  if ToolSlot1 and ToolSlot2 then
+    ToolSlots[SlotIndex1] = ToolSlot2
+    ToolSlots[SlotIndex2] = ToolSlot1
+  end
+  States.ToolSlots:set(ToolSlots)
+end
+
+function States:ToggleContextMenuToSlot(ToolButton: Instance, Tool: Tool)
+	if States.ContextMenu.GuiObject:get() ~= ToolButton then
+		States:SetContextMenuToSlot(ToolButton, Tool)
+	else
+		States.ContextMenu.Active:set(false)
+		States.ContextMenu.GuiObject:set(nil)
+		States.ContextMenu.Actions:set({})
+	end
 end
 
 function States:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
@@ -103,7 +125,7 @@ function States:_FindToolSlot(Tool: Tool)
 end
 
 function States:_ToolAdded(Tool: Tool)
-  if table.find(VALID_TOOL_CLASSES, Tool.ClassName) then
+  if Tool:IsA("Tool") then
     local NewToolSlots = self.ToolSlots:get()
     local ToolSlot = NewToolSlots[self:_FindToolSlot(Tool)]
     if not ToolSlot then

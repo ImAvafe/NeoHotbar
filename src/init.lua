@@ -1,9 +1,8 @@
-local GuiService = game:GetService("GuiService")
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
-local VRService = game:GetService("VRService")
 
 local States = require(script.States)
 local HotbarGui = require(script.Components.Hotbar)
@@ -86,16 +85,15 @@ function NeoHotbar:Start()
 
 			States:ToggleToolEquipped(ToolSlot.Tool:get())
 			States.ManagementMode.Active:set(false)
-		elseif
-			Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
+		elseif (Input.UserInputType == Enum.UserInputType.MouseButton1) or (Input.UserInputType == Enum.UserInputType.Touch) then
 			local InteractedGuiObjects = Players.LocalPlayer.PlayerGui:GetGuiObjectsAtPosition(Input.Position.X, Input.Position.Y)
 			
 			local GuiWithinToolSlots
 			for _, GuiObject in ipairs(InteractedGuiObjects) do
-				if GuiObject:FindFirstAncestor("Hotbar") then
+				local NeoHotbarAncestor = GuiObject:FindFirstAncestor("NeoHotbar")
+				if NeoHotbarAncestor == self._HotbarGui then
 					GuiWithinToolSlots = true
+					break
 				end
 			end
 

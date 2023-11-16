@@ -1,3 +1,6 @@
+local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 local NeoHotbar = script.Parent.Parent
 
 local Fusion = require(NeoHotbar.Parent.Fusion)
@@ -11,12 +14,30 @@ local OnEvent = Fusion.OnEvent
 local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child
 local Value = Fusion.Value
+local Cleanup = Fusion.Cleanup
 
 local Components = NeoHotbar.Components
 
 local ButtonText = require(Components.ButtonText)
 local ButtonImage = require(Components.ButtonImage)
 local ContextMenu = require(Components.ContextMenu)
+
+local Mouse = Players.LocalPlayer:GetMouse()
+local PlayerGui = Players.LocalPlayer:FindFirstChild("PlayerGui")
+
+local MouseMoveConnection: RBXScriptConnection
+UserInputService.InputEnded:Connect(function(Input: InputObject)
+	if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if MouseMoveConnection then
+			MouseMoveConnection:Disconnect()
+		end
+
+		if States.ManagementMode.Swapping.PrimarySlot:get() and States.ManagementMode.Swapping.SecondarySlot:get() then
+			States:SwapToolSlots(States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"), States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber"))
+		end
+		States.ManagementMode.Swapping.SecondarySlot:set(nil)
+	end
+end)
 
 return function(Props: table)
 	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", 1)
@@ -25,6 +46,7 @@ return function(Props: table)
 	Props.ToolNumber = EnsureProp(Props.ToolNumber, "number", 1)
 
 	local Holding = Value(false)
+	local HoveredToolSlot = Value()
 
 	local ToolButton
 	ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone())({
@@ -33,10 +55,12 @@ return function(Props: table)
 		[OnEvent "Activated"] = function()
 			if not States.ManagementMode.Active:get() then
 				States:ToggleToolEquipped(Props.Tool:get())
+			else
+				States:ToggleContextMenuToSlot(ToolButton, Props.Tool:get())
 			end
 		end,
 		[OnEvent "MouseButton2Click"] = function()
-			States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
+			States:ToggleContextMenuToSlot(ToolButton, Props.Tool:get())
 		end,
 		[OnEvent "MouseButton1Down"] = function()
 			Holding:set(true)
@@ -52,11 +76,37 @@ return function(Props: table)
 					end
 				end)
 			else
-				States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
+				States.ManagementMode.Swapping.PrimarySlot:set(ToolButton)
+				MouseMoveConnection = Mouse.Move:Connect(function()
+					if PlayerGui then
+						local Objects = PlayerGui:GetGuiObjectsAtPosition(Mouse.X, Mouse.Y)
+						for _, Object in ipairs(Objects) do
+							if CollectionService:HasTag(Object, "NeoHotbarToolButton") then
+								if Object ~= HoveredToolSlot:get() then
+									HoveredToolSlot:set(Object)
+									States.ManagementMode.Swapping.SecondarySlot:set(Object)
+								end
+							end
+						end
+					end
+				end)
 			end
 		end,
 		[OnEvent "MouseButton1Up"] = function()
 			Holding:set(false)
+
+			if MouseMoveConnection then
+				MouseMoveConnection:Disconnect()
+			end
+		end,
+		[OnEvent "MouseLeave"] = function()
+			Holding:set(false)
+		end,
+
+		[Cleanup] = function()
+			if MouseMoveConnection then
+				MouseMoveConnection:Disconnect()
+			end
 		end,
 
 		[Child "ToolNumber"] = {
@@ -101,6 +151,14 @@ return function(Props: table)
 
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolButton)({
+			BackgroundColor3 = Fusion.Computed(function()
+				if Holding:get() or (States.ManagementMode.Swapping.SecondarySlot:get() and (States.ManagementMode.Swapping.SecondarySlot:get() == ToolButton)) then
+					return Color3.fromRGB(37, 40, 43)
+				else
+					return Color3.fromRGB(25, 27, 29)
+				end
+			end),
+
 			[Child "UIStroke"] = {
 				Enabled = Props.Equipped,
 			},
@@ -108,6 +166,9 @@ return function(Props: table)
 	end
 
 	ToolButton:SetAttribute("Equipped", Props.Equipped:get())
+	ToolButton:SetAttribute("SlotNumber", Props.ToolNumber:get())
+
+	CollectionService:AddTag(ToolButton, "NeoHotbarToolButton")
 
 	return ToolButton
 end

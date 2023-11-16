@@ -30,15 +30,15 @@ return function(Props: table)
 	ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone())({
 		LayoutOrder = Props.LayoutOrder,
 
-		[OnEvent("Activated")] = function()
+		[OnEvent "Activated"] = function()
 			if not States.ManagementMode.Active:get() then
 				States:ToggleToolEquipped(Props.Tool:get())
 			end
 		end,
-		[OnEvent("MouseButton2Click")] = function()
+		[OnEvent "MouseButton2Click"] = function()
 			States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 		end,
-		[OnEvent("MouseButton1Down")] = function()
+		[OnEvent "MouseButton1Down"] = function()
 			Holding:set(true)
 
 			if not States.ManagementMode.Active:get() then
@@ -55,7 +55,7 @@ return function(Props: table)
 				States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 			end
 		end,
-		[OnEvent("MouseButton1Up")] = function()
+		[OnEvent "MouseButton1Up"] = function()
 			Holding:set(false)
 		end,
 

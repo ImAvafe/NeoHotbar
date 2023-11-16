@@ -31,17 +31,17 @@ return function(Props: table)
 			end),
 		},
 
-		[OnEvent("Activated")] = function()
+		[OnEvent "Activated"] = function()
 			States.ContextMenu.Active:set(false)
 
 			if Props.Action:get() and Props.Action:get().Function then
 				Props.Action:get():Function()
 			end
 		end,
-		[OnEvent("MouseEnter")] = function()
+		[OnEvent "MouseEnter"] = function()
 			Hovering:set(true)
 		end,
-		[OnEvent("MouseLeave")] = function()
+		[OnEvent "MouseLeave"] = function()
 			Hovering:set(false)
 		end,
 	})

@@ -18,7 +18,7 @@ return function(Props: table)
 
 	return Hydrate(States.InstanceSet:get().ActionButton:Clone())({
 		BackgroundTransparency = Computed(function()
-			return (Hovering:get() and 0.975) or 1
+			return (Hovering:get() and 0.925) or 1
 		end),
 
 		[Child "Text"] = {

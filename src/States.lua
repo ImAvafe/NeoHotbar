@@ -217,6 +217,9 @@ function States:Start()
       if self.Humanoid then
         self.Humanoid:UnequipTools()
       end
+    else
+      States.ManagementMode.Swapping.PrimarySlot:set(nil)
+      States.ManagementMode.Swapping.SecondarySlot:set(nil)
     end
   end)
 end

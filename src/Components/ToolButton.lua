@@ -79,6 +79,18 @@ return function(Props: table)
 				States:ToggleToolEquipped(Props.Tool:get())
 			else
 				States:ToggleContextMenuToSlot(ToolButton, Props.Tool:get())
+
+				if GuiService.SelectedObject == ToolButton then
+					if States.ManagementMode.Swapping.PrimarySlot:get() then
+						States.ManagementMode.Swapping.SecondarySlot:set(ToolButton)
+						States:SwapToolSlots(States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"), States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber"))
+
+						States.ManagementMode.Swapping.PrimarySlot:set()
+						States.ManagementMode.Swapping.SecondarySlot:set()
+					else
+						States.ManagementMode.Swapping.PrimarySlot:set(ToolButton)
+					end
+				end
 			end
 		end,
 		[OnEvent "MouseButton2Click"] = function()
@@ -102,7 +114,7 @@ return function(Props: table)
 				end
 			end
 
-			if States.ManagementMode.Active:get() then
+			if States.ManagementMode.Active:get() and GuiService.SelectedObject ~= ToolButton then
 				States.ManagementMode.Swapping.PrimarySlot:set(ToolButton)
 
 				MouseMoveConnection = Mouse.Move:Connect(function()
@@ -176,7 +188,12 @@ return function(Props: table)
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolButton)({
 			BackgroundColor3 = Fusion.Computed(function()
-				if Holding:get() or (States.ManagementMode.Swapping.SecondarySlot:get() and (States.ManagementMode.Swapping.SecondarySlot:get() == ToolButton)) then
+				local PrimarySlot = States.ManagementMode.Swapping.PrimarySlot:get()
+				local SecondarySlot = States.ManagementMode.Swapping.SecondarySlot:get()
+
+				local IsPrimarySwapSlot = PrimarySlot and (PrimarySlot == ToolButton)
+				local IsSecondarySwapSlot = SecondarySlot and (SecondarySlot == ToolButton)
+				if Holding:get() or (IsPrimarySwapSlot or IsSecondarySwapSlot) then
 					return Color3.fromRGB(41, 44, 48)
 				else
 					return Color3.fromRGB(25, 27, 29)

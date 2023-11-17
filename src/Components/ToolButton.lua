@@ -15,6 +15,7 @@ local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child
 local Value = Fusion.Value
 local Cleanup = Fusion.Cleanup
+local New = Fusion.New
 
 local Components = NeoHotbar.Components
 
@@ -49,7 +50,7 @@ return function(Props: table)
 	local HoveredToolSlot = Value()
 
 	local ToolButton
-	ToolButton = Hydrate(States.InstanceSet:get().ToolButton:Clone())({
+	ToolButton = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()
@@ -147,7 +148,7 @@ return function(Props: table)
 				end
 			end, Fusion.cleanup),
 		}
-	})
+	}
 
 	if States.DefaultEffectsEnabled:get() then
 		Hydrate(ToolButton)({
@@ -167,6 +168,11 @@ return function(Props: table)
 
 	ToolButton:SetAttribute("Equipped", Props.Equipped:get())
 	ToolButton:SetAttribute("SlotNumber", Props.ToolNumber:get())
+	New "ObjectValue" {
+		Name = "Tool",
+		Value = Props.Tool:get(),
+		Parent = ToolButton,
+	}
 
 	CollectionService:AddTag(ToolButton, "NeoHotbarToolButton")
 

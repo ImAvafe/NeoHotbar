@@ -13,11 +13,11 @@ local Components = NeoHotbar.Components
 local ButtonImage = require(Components.ButtonImage)
 
 return function(Props: table)
-	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", "0")
+	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", 0)
 	Props.Callback = EnsureProp(Props.Callback, "function", function()end)
 	Props.Icon = EnsureProp(Props.Icon, "string", "")
 	
-	return Hydrate(States.InstanceSet:get().CustomButton:Clone()) {
+	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()

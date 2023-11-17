@@ -9,8 +9,15 @@ local Hydrate = Fusion.Hydrate
 return function(Props: table)
 	Props.Text = EnsureProp(Props.Text, "string", "Text")
 
-	return Hydrate(States.InstanceSet:get().ButtonText:Clone()) {
+	local ButtonText = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		Text = Props.Text,
-		Font = (States.DefaultEffectsEnabled:get() and Enum.Font.Gotham) or nil,
 	}
+
+	if States.DefaultEffectsEnabled:get() then
+		Hydrate(ButtonText)({
+			FontFace = Font.fromName("GothamSsm")
+		})
+	end
+
+	return ButtonText
 end

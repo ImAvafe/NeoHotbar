@@ -13,7 +13,7 @@ local Components = NeoHotbar.Components
 local ContextActionButton = require(Components.ContextActionButton)
 
 return function()
-	return Hydrate(States.InstanceSet:get().ContextMenu:Clone())({
+	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		Visible = States.ContextMenu.Active,
 
 		[Child "Actions"] = {
@@ -25,5 +25,5 @@ return function()
 				end, Fusion.cleanup),
 			},
 		},
-	})
+	}
 end

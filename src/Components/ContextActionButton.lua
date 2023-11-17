@@ -16,21 +16,7 @@ return function(Props: table)
 
 	local Hovering = Value(false)
 
-	return Hydrate(States.InstanceSet:get().ActionButton:Clone())({
-		BackgroundTransparency = Computed(function()
-			return (Hovering:get() and 0.925) or 1
-		end),
-
-		[Child "Text"] = {
-			Text = Computed(function()
-				local Name
-				if Props.Action:get() then
-					Name = Props.Action:get().Name
-				end
-				return Name or "Action"
-			end),
-		},
-
+	local ContextActionButton = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		[OnEvent "Activated"] = function()
 			States.ContextMenu.Active:set(false)
 
@@ -44,5 +30,29 @@ return function(Props: table)
 		[OnEvent "MouseLeave"] = function()
 			Hovering:set(false)
 		end,
-	})
+
+		[Child "Text"] = {
+			Text = Computed(function()
+				local Name
+				if Props.Action:get() then
+					Name = Props.Action:get().Name
+				end
+				return Name or "Action"
+			end),
+		},
+	}
+
+	if States.DefaultEffectsEnabled:get() then
+		Hydrate(ContextActionButton) {
+			BackgroundTransparency = Computed(function()
+				return (Hovering:get() and 0.925) or 1
+			end),
+
+			[Child "Text"] = {
+				FontFace = Font.fromName("GothamSsm")
+			}
+		}
+	end
+
+	return ContextActionButton
 end

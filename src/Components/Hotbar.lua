@@ -20,7 +20,7 @@ local ToolTip = require(Components.ToolTip)
 return function(Props: table)
 	Props.Parent = EnsureProp(Props.Parent, "Instance", nil)
 
-	local Hotbar = Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
+	local Hotbar = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 		Enabled = States.Enabled,
@@ -28,6 +28,10 @@ return function(Props: table)
 		[Child "Hotbar"] = {
 			[Child "Buttons"] = {
 				[Child "CustomButtons"] = {
+					Visible = Computed(function()
+						return not States.ManagementMode.Active:get()
+					end),
+
 					[Children] = ForPairs(States.CustomButtons, function(ButtonNum, ButtonEntry)
 						return ButtonNum, CustomButton {
 							Icon = ButtonEntry.Icon,
@@ -77,12 +81,6 @@ return function(Props: table)
 						[Child "UIStroke"] = {
 							Enabled = States.ManagementMode.Active,
 						},
-					},
-					[Child "CustomButtons"] = {
-						Visible = Computed(function()
-							local ManagementModeEnabled = States.ManagementMode.Active:get()
-							return not ManagementModeEnabled
-						end)
 					},
 					[Child "UIListLayout"] = {
 						Padding = Computed(function()

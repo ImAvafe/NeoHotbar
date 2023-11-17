@@ -1,4 +1,5 @@
 local CollectionService = game:GetService("CollectionService")
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local NeoHotbar = script.Parent.Parent
@@ -26,11 +27,18 @@ local ContextMenu = require(Components.ContextMenu)
 local Mouse = Players.LocalPlayer:GetMouse()
 local PlayerGui = Players.LocalPlayer:FindFirstChild("PlayerGui")
 
+local HoveredToolSlot = Value()
+
 local MouseMoveConnection: RBXScriptConnection
+local TouchMoveConnection: RBXScriptConnection
+
 UserInputService.InputEnded:Connect(function(Input: InputObject)
-	if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+	if (Input.UserInputType == Enum.UserInputType.MouseButton1) or Input.UserInputType == Enum.UserInputType.Touch then
 		if MouseMoveConnection then
 			MouseMoveConnection:Disconnect()
+		end
+		if TouchMoveConnection then
+			TouchMoveConnection:Disconnect()
 		end
 
 		if States.ManagementMode.Swapping.PrimarySlot:get() and States.ManagementMode.Swapping.SecondarySlot:get() then
@@ -40,6 +48,20 @@ UserInputService.InputEnded:Connect(function(Input: InputObject)
 	end
 end)
 
+local function SelectionMove(X: number, Y: number)
+	if PlayerGui then
+		local Objects = PlayerGui:GetGuiObjectsAtPosition(X, Y)
+		for _, Object in ipairs(Objects) do
+			if CollectionService:HasTag(Object, "NeoHotbarToolButton") then
+				if Object ~= HoveredToolSlot:get() then
+					HoveredToolSlot:set(Object)
+					States.ManagementMode.Swapping.SecondarySlot:set(Object)
+				end
+			end
+		end
+	end
+end
+
 return function(Props: table)
 	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", 1)
 	Props.Equipped = EnsureProp(Props.Equipped, "boolean", false)
@@ -47,7 +69,6 @@ return function(Props: table)
 	Props.ToolNumber = EnsureProp(Props.ToolNumber, "number", 1)
 
 	local Holding = Value(false)
-	local HoveredToolSlot = Value()
 
 	local ToolButton
 	ToolButton = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
@@ -66,30 +87,29 @@ return function(Props: table)
 		[OnEvent "MouseButton1Down"] = function()
 			Holding:set(true)
 
-			if not States.ManagementMode.Active:get() then
-				if States.HotbarHoldProcess then
-					task.cancel(States.HotbarHoldProcess)
-				end
-				States.HotbarHoldProcess = task.delay(0.25, function()
-					if Holding:get() == true then
-						States.ManagementMode.Active:set(States.ManagementMode.Enabled:get() and true)
-						States.ToolTip.Visible:set(false)
+			if States.ManagementMode.Enabled:get() then
+				if not States.ManagementMode.Active:get() or GuiService.SelectedObject == ToolButton then
+					if States.HotbarHoldProcess then
+						task.cancel(States.HotbarHoldProcess)
 					end
-				end)
-			else
-				States.ManagementMode.Swapping.PrimarySlot:set(ToolButton)
-				MouseMoveConnection = Mouse.Move:Connect(function()
-					if PlayerGui then
-						local Objects = PlayerGui:GetGuiObjectsAtPosition(Mouse.X, Mouse.Y)
-						for _, Object in ipairs(Objects) do
-							if CollectionService:HasTag(Object, "NeoHotbarToolButton") then
-								if Object ~= HoveredToolSlot:get() then
-									HoveredToolSlot:set(Object)
-									States.ManagementMode.Swapping.SecondarySlot:set(Object)
-								end
-							end
+					States.HotbarHoldProcess = task.delay(0.25, function()
+						if Holding:get() == true then
+							States.ManagementMode.Active:set(not States.ManagementMode.Active:get())
+							States.ToolTip.Visible:set(false)
+							States.ContextMenu.Active:set(false)
 						end
-					end
+					end)
+				end
+			end
+
+			if States.ManagementMode.Active:get() then
+				States.ManagementMode.Swapping.PrimarySlot:set(ToolButton)
+
+				MouseMoveConnection = Mouse.Move:Connect(function()
+					SelectionMove(Mouse.X, Mouse.Y)
+				end)
+				TouchMoveConnection = UserInputService.TouchMoved:Connect(function(Input: InputObject)
+					SelectionMove(Input.Position.X, Input.Position.Y)
 				end)
 			end
 		end,
@@ -98,6 +118,9 @@ return function(Props: table)
 
 			if MouseMoveConnection then
 				MouseMoveConnection:Disconnect()
+			end
+			if TouchMoveConnection then
+				TouchMoveConnection:Disconnect()
 			end
 		end,
 		[OnEvent "MouseLeave"] = function()
@@ -154,7 +177,7 @@ return function(Props: table)
 		Hydrate(ToolButton)({
 			BackgroundColor3 = Fusion.Computed(function()
 				if Holding:get() or (States.ManagementMode.Swapping.SecondarySlot:get() and (States.ManagementMode.Swapping.SecondarySlot:get() == ToolButton)) then
-					return Color3.fromRGB(37, 40, 43)
+					return Color3.fromRGB(41, 44, 48)
 				else
 					return Color3.fromRGB(25, 27, 29)
 				end

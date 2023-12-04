@@ -33,7 +33,7 @@ local States = {
   },
   ToolSlots = Value({}),
   CustomButtons = Value({}),
-  GamepadConnected = Value(false)
+  GamepadInUse = Value(false)
 }
 
 function States:DropTool(Tool: Tool)
@@ -203,6 +203,11 @@ function States:_CharacterAdded(NewChar: Model)
   self:_ScanToolDir(self.Backpack)
 end
 
+function States:_UpdateGamepadInUse(Input: InputObject)
+  local Gamepads = {Enum.UserInputType.Gamepad1, Enum.UserInputType.Gamepad2, Enum.UserInputType.Gamepad3, Enum.UserInputType.Gamepad4, Enum.UserInputType.Gamepad5, Enum.UserInputType.Gamepad6, Enum.UserInputType.Gamepad7, Enum.UserInputType.Gamepad8}
+  States.GamepadInUse:set(table.find(Gamepads, Input.UserInputType) ~= nil)
+end
+
 function States:Start()
   self.Backpack = Players.LocalPlayer:WaitForChild("Backpack")
 
@@ -224,16 +229,12 @@ function States:Start()
       States.ManagementMode.Swapping.SecondarySlot:set(nil)
     end
   end)
-
-  -- UserInputService.GamepadConnected:Connect(function()
-  --   States:_CheckForGamepad()
-  -- end)
-  -- UserInputService.GamepadDisconnected:Connect(function()
-  --   States:_CheckForGamepad()
-  -- end)
+  
   UserInputService.InputChanged:Connect(function(Input: InputObject)
-    local Gamepads = {Enum.UserInputType.Gamepad1, Enum.UserInputType.Gamepad2, Enum.UserInputType.Gamepad3, Enum.UserInputType.Gamepad4, Enum.UserInputType.Gamepad5, Enum.UserInputType.Gamepad6, Enum.UserInputType.Gamepad7, Enum.UserInputType.Gamepad8}
-    States.GamepadConnected:set(table.find(Gamepads, Input.UserInputType) ~= nil)
+    self:_UpdateGamepadInUse(Input)
+  end)
+  UserInputService.InputEnded:Connect(function(Input: InputObject)
+    self:_UpdateGamepadInUse(Input)
   end)
 end
 

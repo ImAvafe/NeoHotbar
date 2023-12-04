@@ -24,7 +24,7 @@ return function(Props: table)
 
 	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
     GroupTransparency = Spring(Computed(function()
-      if States.GamepadConnected:get() and (string.len(KeycodeImage:get()) >= 1) then
+      if States.GamepadInUse:get() and (string.len(KeycodeImage:get()) >= 1) then
         return 0
       else
         return 1

@@ -37,6 +37,7 @@ return function(Props: table)
 							Icon = ButtonEntry.Icon,
 							Callback = ButtonEntry.Callback,
 							LayoutOrder = ButtonEntry,
+							GamepadKeybind = ButtonEntry.GamepadKeybind,
 						}
 					end, Fusion.cleanup),
 				},

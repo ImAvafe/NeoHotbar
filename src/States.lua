@@ -1,4 +1,5 @@
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 
 local NeoHotbar = script.Parent
 
@@ -32,6 +33,7 @@ local States = {
   },
   ToolSlots = Value({}),
   CustomButtons = Value({}),
+  GamepadConnected = Value(false)
 }
 
 function States:DropTool(Tool: Tool)
@@ -221,6 +223,17 @@ function States:Start()
       States.ManagementMode.Swapping.PrimarySlot:set(nil)
       States.ManagementMode.Swapping.SecondarySlot:set(nil)
     end
+  end)
+
+  -- UserInputService.GamepadConnected:Connect(function()
+  --   States:_CheckForGamepad()
+  -- end)
+  -- UserInputService.GamepadDisconnected:Connect(function()
+  --   States:_CheckForGamepad()
+  -- end)
+  UserInputService.InputChanged:Connect(function(Input: InputObject)
+    local Gamepads = {Enum.UserInputType.Gamepad1, Enum.UserInputType.Gamepad2, Enum.UserInputType.Gamepad3, Enum.UserInputType.Gamepad4, Enum.UserInputType.Gamepad5, Enum.UserInputType.Gamepad6, Enum.UserInputType.Gamepad7, Enum.UserInputType.Gamepad8}
+    States.GamepadConnected:set(table.find(Gamepads, Input.UserInputType) ~= nil)
   end)
 end
 

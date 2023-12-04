@@ -11,11 +11,13 @@ local Hydrate = Fusion.Hydrate
 local Components = NeoHotbar.Components
 
 local ButtonImage = require(Components.ButtonImage)
+local ButtonHint = require(Components.ButtonHint)
 
 return function(Props: table)
 	Props.LayoutOrder = EnsureProp(Props.LayoutOrder, "number", 0)
 	Props.Callback = EnsureProp(Props.Callback, "function", function()end)
 	Props.Icon = EnsureProp(Props.Icon, "string", "")
+	Props.GamepadKeybind = EnsureProp(Props.GamepadKeybind, "EnumItem", nil)
 	
 	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		LayoutOrder = Props.LayoutOrder,
@@ -29,6 +31,9 @@ return function(Props: table)
 		[Children] = {
 			ButtonImage {
 				Image = Props.Icon
+			},
+			ButtonHint {
+				Keycode = Props.GamepadKeybind
 			}
 		}
 	}

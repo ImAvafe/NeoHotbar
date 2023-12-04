@@ -1,4 +1,5 @@
 local CollectionService = game:GetService("CollectionService")
+local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
@@ -176,6 +177,7 @@ end
   Overrides NeoHotbar's UI with a new set of Gui objects.
 
   @param CustomGuiSet -- The parent folder containing your custom Gui objects.
+	@param DefaultEffectsEnabled? -- Whether or not to enable NeoHotbar's built-in UI effects. Not compatible with ultra-customized themes.
 ]=]
 function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: boolean?)
 	if typeof(CustomGuiSet) ~= "Instance" then return end
@@ -216,8 +218,9 @@ end
   @param ButtonName string -- The name/identifier of the button to be added.
   @param IconImage string -- The image URI to be used on the button icon. E.g. "rbxassetid://".
   @param Callback function -- The function called upon button activation (click/touch/etc).
+	@param GamepadKeybind EnumItem? -- A gamepad keycode to trigger your custom button.
 ]=]
-function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any)
+function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any, GamepadKeybind: EnumItem?)
 	if typeof(ButtonName) ~= "string" then return end
 	if typeof(IconImage) ~= "string" then return end
 
@@ -231,8 +234,17 @@ function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callba
 		Name = ButtonName,
 		Icon = IconImage,
 		Callback = Callback,
+		GamepadKeybind = GamepadKeybind,
 	})
 	States.CustomButtons:set(CustomButtons)
+
+	if GamepadKeybind then
+		ContextActionService:BindAction(`NeoHotbar_{ButtonName}`, function(_, InputState: EnumItem)
+			if InputState == Enum.UserInputState.End then
+				Callback()
+			end
+		end, false, GamepadKeybind)
+	end
 end
 
 --[=[
@@ -254,6 +266,10 @@ function NeoHotbar:RemoveCustomButton(ButtonName: string)
 	local CustomButtons = States.CustomButtons:get()
 	table.remove(CustomButtons, table.find(CustomButtons, CustomButton))
 	States.CustomButtons:set(CustomButtons)
+
+	if CustomButton.GamepadKeybind then
+		ContextActionService:UnbindAction(`NeoHotbar_{ButtonName}`)
+	end
 end
 
 --[=[

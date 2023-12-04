@@ -78,8 +78,9 @@ return function(Props: table)
 			if not States.ManagementMode.Active:get() then
 				States:ToggleToolEquipped(Props.Tool:get())
 			else
-				States:ToggleContextMenuToSlot(ToolButton, Props.Tool:get())
+				States.ContextMenu.Active:set(false)
 
+				local SwappedTool = false
 				if GuiService.SelectedObject == ToolButton then
 					if States.ManagementMode.Swapping.PrimarySlot:get() then
 						States.ManagementMode.Swapping.SecondarySlot:set(ToolButton)
@@ -87,9 +88,14 @@ return function(Props: table)
 
 						States.ManagementMode.Swapping.PrimarySlot:set()
 						States.ManagementMode.Swapping.SecondarySlot:set()
+						SwappedTool = true
 					else
 						States.ManagementMode.Swapping.PrimarySlot:set(ToolButton)
 					end
+				end
+
+				if not SwappedTool then
+					States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
 				end
 			end
 		end,

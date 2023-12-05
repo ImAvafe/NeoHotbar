@@ -17,6 +17,8 @@ local Child = FusionUtils.Child
 local Value = Fusion.Value
 local Cleanup = Fusion.Cleanup
 local New = Fusion.New
+local Observer = Fusion.Observer
+local Cleanup = Fusion.Cleanup
 
 local Components = NeoHotbar.Components
 
@@ -69,6 +71,7 @@ return function(Props: table)
 	Props.ToolNumber = EnsureProp(Props.ToolNumber, "number", 1)
 
 	local Holding = Value(false)
+	local ObserverDisconnects = {}
 
 	local ToolButton
 	ToolButton = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
@@ -78,6 +81,7 @@ return function(Props: table)
 			if not States.ManagementMode.Active:get() then
 				States:ToggleToolEquipped(Props.Tool:get())
 			else
+				print(1)
 				States.ContextMenu.Active:set(false)
 
 				local SwappedTool = false
@@ -112,9 +116,15 @@ return function(Props: table)
 					end
 					States.HotbarHoldProcess = task.delay(0.25, function()
 						if Holding:get() == true then
+							Holding:set(false)
+
 							States.ManagementMode.Active:set(not States.ManagementMode.Active:get())
 							States.ToolTip.Visible:set(false)
 							States.ContextMenu.Active:set(false)
+
+							if (not States.ManagementMode.Active:get()) and (GuiService.SelectedObject == ToolButton) then
+								GuiService.SelectedObject = nil
+							end
 						end
 					end)
 				end
@@ -148,6 +158,9 @@ return function(Props: table)
 		[Cleanup] = function()
 			if MouseMoveConnection then
 				MouseMoveConnection:Disconnect()
+			end
+			for _, Disconnect in ipairs(ObserverDisconnects) do
+				Disconnect()
 			end
 		end,
 
@@ -212,6 +225,10 @@ return function(Props: table)
 		})
 	end
 
+	table.insert(ObserverDisconnects, Observer(Holding):onChange(function()
+		ToolButton:SetAttribute("Holding", Holding:get())
+	end))
+	ToolButton:SetAttribute("Holding", Holding:get()) 
 	ToolButton:SetAttribute("Equipped", Props.Equipped:get())
 	ToolButton:SetAttribute("SlotNumber", Props.ToolNumber:get())
 	New "ObjectValue" {

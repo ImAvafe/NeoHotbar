@@ -1,3 +1,5 @@
+local CollectionService = game:GetService("CollectionService")
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
@@ -133,26 +135,39 @@ function States:_ToolAdded(Tool: Tool)
     if not ToolSlot then
       table.insert(NewToolSlots, {
         Tool = Value(Tool),
-        Equipped = Value(Tool.Parent == self.Char)
+        Equipped = Value(Tool.Parent == self.Character)
       })
       ToolSlot = NewToolSlots[self:_FindToolSlot(Tool)]
     else
-      ToolSlot.Equipped:set(Tool.Parent == self.Char)
+      ToolSlot.Equipped:set(Tool.Parent == self.Character)
     end
     self.ToolSlots:set(NewToolSlots)
 
-    if ToolSlot.Equipped:get() and not self.ManagementMode.Active:get() then
-      if utf8.len(Tool.ToolTip) >= 1 then
-        self.ToolTip.Text:set(Tool.ToolTip)
-        self.ToolTip.Visible:set(States.ToolTip.Enabled:get() and true)
-        if self.ToolTipProcess then
-          task.cancel(self.ToolTipProcess)
-        end
-        self.ToolTipProcess = task.delay(2, function()
-          self.ToolTip.Visible:set(false)
+    if ToolSlot.Equipped:get() then
+      if self.ManagementMode.Active:get() then
+        task.defer(function()
+          if Tool.Parent == self.Character then
+            self.ManagementMode.Active:set(false)
+            self.ContextMenu.Active:set(false)
+
+            if CollectionService:HasTag(GuiService.SelectedObject, "NeoHotbarToolButton") then
+              GuiService.SelectedObject = nil
+            end
+          end
         end)
       else
-        self.ToolTip.Visible:set(false)
+        if utf8.len(Tool.ToolTip) >= 1 then
+          self.ToolTip.Text:set(Tool.ToolTip)
+          self.ToolTip.Visible:set(States.ToolTip.Enabled:get() and true)
+          if self.ToolTipProcess then
+            task.cancel(self.ToolTipProcess)
+          end
+          self.ToolTipProcess = task.delay(2, function()
+            self.ToolTip.Visible:set(false)
+          end)
+        else
+          self.ToolTip.Visible:set(false)
+        end
       end
     end
   end
@@ -163,11 +178,11 @@ function States:_ToolRemoved(Tool: Tool)
   local ToolNum = self:_FindToolSlot(Tool)
   local ToolSlot = NewToolSlots[ToolNum]
   if ToolSlot then
-    if Tool.Parent ~= self.Backpack and Tool.Parent ~= self.Char then
+    if Tool.Parent ~= self.Backpack and Tool.Parent ~= self.Character then
       table.remove(NewToolSlots, ToolNum)
       self.ToolTip.Visible:set(false)
     else
-      ToolSlot.Equipped:set(Tool.Parent == self.Char)
+      ToolSlot.Equipped:set(Tool.Parent == self.Character)
     end
     self.ToolSlots:set(NewToolSlots)
   end
@@ -182,16 +197,16 @@ end
 function States:_CharacterAdded(NewChar: Model)
   self.ToolSlots:set({})
   
-  self.Char = NewChar
-  self.Humanoid = self.Char:WaitForChild("Humanoid")
+  self.Character = NewChar
+  self.Humanoid = self.Character:WaitForChild("Humanoid")
 
-  self.Char.ChildAdded:Connect(function(Tool)
+  self.Character.ChildAdded:Connect(function(Tool)
     self:_ToolAdded(Tool)
   end)
-  self.Char.ChildRemoved:Connect(function(Tool)
+  self.Character.ChildRemoved:Connect(function(Tool)
     self:_ToolRemoved(Tool)
   end)
-  self:_ScanToolDir(self.Char)
+  self:_ScanToolDir(self.Character)
 
   self.Backpack = Players.LocalPlayer:WaitForChild("Backpack")
   self.Backpack.ChildAdded:Connect(function(Tool)

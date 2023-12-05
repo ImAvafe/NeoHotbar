@@ -10,11 +10,14 @@ local OnEvent = Fusion.OnEvent
 local Value = Fusion.Value
 local Computed = Fusion.Computed
 local Child = FusionUtils.Child
+local Observer = Fusion.Observer
+local Cleanup = Fusion.Cleanup
 
 return function(Props: table)
 	Props.Action = EnsureProp(Props.Action, "table", {})
 
 	local Hovering = Value(false)
+	local ObserverDisconnects = {}
 
 	local ContextActionButton = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		[OnEvent "Activated"] = function()
@@ -40,6 +43,12 @@ return function(Props: table)
 				return Name or "Action"
 			end),
 		},
+
+		[Cleanup] = function()
+			for _, Disconnect in ipairs(ObserverDisconnects) do
+				Disconnect()
+			end
+		end
 	}
 
 	if States.DefaultEffectsEnabled:get() then
@@ -53,6 +62,11 @@ return function(Props: table)
 			}
 		}
 	end
+
+	table.insert(ObserverDisconnects, Observer(Hovering):onChange(function()
+		ContextActionButton:SetAttribute("Hovering", Hovering:get())
+	end))
+	ContextActionButton:SetAttribute("Hovering", Hovering:get())
 
 	return ContextActionButton
 end

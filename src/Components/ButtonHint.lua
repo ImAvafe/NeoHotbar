@@ -10,6 +10,8 @@ local Hydrate = Fusion.Hydrate
 local Computed = Fusion.Computed
 local Child = FusionUtils.Child
 local Spring = Fusion.Spring
+local Observer = Fusion.Observer
+local Cleanup = Fusion.Cleanup
 
 return function(Props: table)
 	Props.Keycode = EnsureProp(Props.Keycode, "EnumItem", nil)
@@ -21,18 +23,35 @@ return function(Props: table)
       return ""
     end
   end)
+  local Shown = Computed(function()
+    return States.GamepadInUse:get() and (string.len(KeycodeImage:get()) >= 1)
+  end)
+  local ObserverDisconnects = {}
 
-	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
-    GroupTransparency = Spring(Computed(function()
-      if States.GamepadInUse:get() and (string.len(KeycodeImage:get()) >= 1) then
-        return 0
-      else
-        return 1
-      end
-    end), 40, 1),
-
+	local ButtonHint = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
     [Child "Image"] = {
       Image = KeycodeImage,
-    }
+    },
+    
+    [Cleanup] = function()
+      for _, Disconnect in ipairs(ObserverDisconnects) do
+        Disconnect()
+      end
+    end
 	}
+
+  if States.DefaultEffectsEnabled:get() then
+    Hydrate(ButtonHint) {
+      GroupTransparency = Spring(Computed(function()
+        return (Shown:get() and 0) or 1
+      end), 40, 1),
+    }
+  end
+
+  table.insert(ObserverDisconnects, Observer(Shown):onChange(function()
+    ButtonHint:SetAttribute("Shown", Shown:get())
+  end))
+  ButtonHint:SetAttribute("Shown", Shown:get())
+
+  return ButtonHint
 end

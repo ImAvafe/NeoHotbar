@@ -4,13 +4,9 @@ sidebar_position: 1
 
 # Getting Started
 
-NeoHotbar is a modern, heavily customizable hotbar for Roblox. It aims to provide an instant upgrade, and a base for your own hotbar interface.
-
-It follows standard Roblox conventions, using the `Tool` object and its associated features.
+NeoHotbar is a modern, flexible hotbar for Roblox. It aims to provide an instant upgrade and be very customizable to fit your games' needs.
 
 ## Installation
-
-*NeoHotbar is not ready to install! The following instructions are <u>placeholder.</u>*
 
 ### Roblox Studio
 

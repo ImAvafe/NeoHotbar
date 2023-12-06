@@ -20,7 +20,7 @@ local ToolTip = require(Components.ToolTip)
 return function(Props: table)
 	Props.Parent = EnsureProp(Props.Parent, "Instance", nil)
 
-	local Hotbar = Hydrate(States.InstanceSet:get().Hotbar:Clone()) {
+	local Hotbar = Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		Name = "NeoHotbar",
 		Parent = Props.Parent,
 		Enabled = States.Enabled,
@@ -28,18 +28,22 @@ return function(Props: table)
 		[Child "Hotbar"] = {
 			[Child "Buttons"] = {
 				[Child "CustomButtons"] = {
+					Visible = Computed(function()
+						return not States.ManagementMode.Active:get()
+					end),
+
 					[Children] = ForPairs(States.CustomButtons, function(ButtonNum, ButtonEntry)
 						return ButtonNum, CustomButton {
 							Icon = ButtonEntry.Icon,
 							Callback = ButtonEntry.Callback,
 							LayoutOrder = ButtonEntry,
+							GamepadKeybind = ButtonEntry.GamepadKeybind,
 						}
 					end, Fusion.cleanup),
 				},
 				[Child "ToolSlots"] = {
 					[Children] = ForPairs(States.ToolSlots, function(ToolNum, ToolSlot)
 						return ToolNum, ToolButton {
-							Slot = ToolSlot,
 							Tool = ToolSlot.Tool,
 							Equipped = ToolSlot.Equipped,
 							ToolNumber = ToolNum,
@@ -57,7 +61,7 @@ return function(Props: table)
 
 	if States.DefaultEffectsEnabled:get() then
 		local Padding = Computed(function()
-			local ManagementModeEnabled = States.ManagementMode.Enabled:get()
+			local ManagementModeEnabled = States.ManagementMode.Active:get()
 			return UDim.new(0, (ManagementModeEnabled and 4) or 0)
 		end)
 
@@ -66,8 +70,7 @@ return function(Props: table)
 				[Child "Buttons"] = {
 					[Child "ToolSlots"] = {
 						BackgroundTransparency = Computed(function()
-							local ManagementModeEnabled = States.ManagementMode.Enabled:get()
-							return (ManagementModeEnabled and 0.8) or 1
+							return (States.ManagementMode.Active:get() and 0.8) or 1
 						end),
 
 						[Child "UIPadding"] = {
@@ -77,14 +80,8 @@ return function(Props: table)
 							PaddingLeft = Padding,
 						},
 						[Child "UIStroke"] = {
-							Enabled = States.ManagementMode.Enabled,
+							Enabled = States.ManagementMode.Active,
 						},
-					},
-					[Child "CustomButtons"] = {
-						Visible = Computed(function()
-							local ManagementModeEnabled = States.ManagementMode.Enabled:get()
-							return not ManagementModeEnabled
-						end)
 					},
 					[Child "UIListLayout"] = {
 						Padding = Computed(function()

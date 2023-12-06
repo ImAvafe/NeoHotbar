@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-    A modern, customizable hotbar for Roblox
+    A modern, flexible hotbar for Roblox
 </p>
 
 <p align="center">
@@ -15,18 +15,22 @@
   <img title="MIT licensed" alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
 </p>
 
-## Installation 📦
+---
 
-*NeoHotbar is not ready to install! The following instructions are <u>placeholder!</u>*
+## [Installation 📦](https://avafe.me/NeoHotbar/docs/intro/#installation)
 
-For easy installation, insert [NeoHotbar](https://example.com) from the Toolbox. **UPDATE MEE**
+## Features
 
-For Rojo / advanced users, read the [installation docs](https://avafe.me/NeoHotbar/docs/intro#installation).
+- Modern design
+- Proper mobile, console and VR support
+- Full UI overriding
+- Custom buttons
+- Functional properties
 
-## Documentation 📄
+## [Documentation 📄](https://avafe.me/NeoHotbar/docs/intro)
 
-For info on customization, API and more, visit the [documentation site](https://avafe.me/NeoHotbar/docs/customization).
+For info on customization, API and more, visit the [documentation site](https://avafe.me/NeoHotbar/docs/intro).
 
-## Live Demo ▶
+## [Live Demo 🎮](https://roblox.com/games/12259231211)
 
 A live testing place is available at [NeoHotbar Demo](https://roblox.com/games/12259231211).

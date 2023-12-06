@@ -5,7 +5,6 @@ local FusionUtils = require(NeoHotbar.Parent.FusionUtils)
 local States = require(NeoHotbar.States)
 
 local Hydrate = Fusion.Hydrate
-local Computed = Fusion.Computed
 local Child = FusionUtils.Child
 local Children = Fusion.Children
 local ForValues = Fusion.ForValues
@@ -14,7 +13,7 @@ local Components = NeoHotbar.Components
 local ContextActionButton = require(Components.ContextActionButton)
 
 return function()
-	return Hydrate(States.InstanceSet:get().ContextMenu:Clone())({
+	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		Visible = States.ContextMenu.Active,
 
 		[Child "Actions"] = {
@@ -26,5 +25,5 @@ return function()
 				end, Fusion.cleanup),
 			},
 		},
-	})
+	}
 end

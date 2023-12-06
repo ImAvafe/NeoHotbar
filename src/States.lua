@@ -1,4 +1,7 @@
+local CollectionService = game:GetService("CollectionService")
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 
 local NeoHotbar = script.Parent
 
@@ -6,28 +9,33 @@ local Fusion = require(NeoHotbar.Parent.Fusion)
 
 local Value = Fusion.Value
 local Observer = Fusion.Observer
-local Computed = Fusion.Computed
-
-local VALID_TOOL_CLASSES = {"Tool", "HopperBin"}
 
 local States = {
+  Enabled = Value(true),
   InstanceSet = Value(NeoHotbar.DefaultInstances),
   DefaultEffectsEnabled = Value(true),
   ManagementMode = {
-    Enabled = Value(false)
+    Enabled = Value(true),
+    Active = Value(false),
+    Swapping = {
+      PrimarySlot = Value(),
+      SecondarySlot = Value(),
+    },
   },
   ToolTip = {
+    Enabled = Value(true),
     Visible = Value(false),
     Text = Value(''),
   },
   ContextMenu = {
+    Enabled = Value(true),
     Active = Value(false),
     GuiObject = Value(),
     Actions = Value()
   },
   ToolSlots = Value({}),
   CustomButtons = Value({}),
-  Enabled = Value(true),
+  GamepadInUse = Value(false)
 }
 
 function States:DropTool(Tool: Tool)
@@ -43,11 +51,31 @@ function States:ToggleToolEquipped(Tool: Tool)
   end
 end
 
+function States:SwapToolSlots(SlotIndex1: number, SlotIndex2: number)
+  local ToolSlots = States.ToolSlots:get()
+  local ToolSlot1, ToolSlot2 = ToolSlots[SlotIndex1], ToolSlots[SlotIndex2]
+  if ToolSlot1 and ToolSlot2 then
+    ToolSlots[SlotIndex1] = ToolSlot2
+    ToolSlots[SlotIndex2] = ToolSlot1
+  end
+  States.ToolSlots:set(ToolSlots)
+end
+
+function States:ToggleContextMenuToSlot(ToolButton: Instance, Tool: Tool)
+	if States.ContextMenu.GuiObject:get() ~= ToolButton then
+		States:SetContextMenuToSlot(ToolButton, Tool)
+	else
+		States.ContextMenu.Active:set(false)
+		States.ContextMenu.GuiObject:set(nil)
+		States.ContextMenu.Actions:set({})
+	end
+end
+
 function States:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
   if typeof(ToolButton) ~= "Instance" then return end
   if typeof(Tool) ~= "Instance" then return end
   if not Tool:IsA("Tool") then return end
-
+  
   local Actions = {}
   if Tool.CanBeDropped then
     table.insert(Actions, {
@@ -60,8 +88,10 @@ function States:SetContextMenuToSlot(ToolButton: GuiObject, Tool: Tool)
   self.ContextMenu.Actions:set(Actions)
 
   if #Actions >= 1 then
-    self.ContextMenu.GuiObject:set(ToolButton)
-    self.ContextMenu.Active:set(true)
+    if self.ContextMenu.Enabled:get() then
+      self.ContextMenu.GuiObject:set(ToolButton)
+      self.ContextMenu.Active:set(true)
+    end
   else
     self.ContextMenu.GuiObject:set(nil)
     self.ContextMenu.Active:set(false)
@@ -99,32 +129,45 @@ function States:_FindToolSlot(Tool: Tool)
 end
 
 function States:_ToolAdded(Tool: Tool)
-  if table.find(VALID_TOOL_CLASSES, Tool.ClassName) then
+  if Tool:IsA("Tool") then
     local NewToolSlots = self.ToolSlots:get()
     local ToolSlot = NewToolSlots[self:_FindToolSlot(Tool)]
     if not ToolSlot then
       table.insert(NewToolSlots, {
         Tool = Value(Tool),
-        Equipped = Value(Tool.Parent == self.Char)
+        Equipped = Value(Tool.Parent == self.Character)
       })
       ToolSlot = NewToolSlots[self:_FindToolSlot(Tool)]
     else
-      ToolSlot.Equipped:set(Tool.Parent == self.Char)
+      ToolSlot.Equipped:set(Tool.Parent == self.Character)
     end
     self.ToolSlots:set(NewToolSlots)
 
-    if ToolSlot.Equipped:get() and not self.ManagementMode.Enabled:get() then
-      if utf8.len(Tool.ToolTip) >= 1 then
-        self.ToolTip.Text:set(Tool.ToolTip)
-        self.ToolTip.Visible:set(true)
-        if self.ToolTipProcess then
-          task.cancel(self.ToolTipProcess)
-        end
-        self.ToolTipProcess = task.delay(2, function()
-          self.ToolTip.Visible:set(false)
+    if ToolSlot.Equipped:get() then
+      if self.ManagementMode.Active:get() then
+        task.defer(function()
+          if Tool.Parent == self.Character then
+            self.ManagementMode.Active:set(false)
+            self.ContextMenu.Active:set(false)
+
+            if CollectionService:HasTag(GuiService.SelectedObject, "NeoHotbarToolButton") then
+              GuiService.SelectedObject = nil
+            end
+          end
         end)
       else
-        self.ToolTip.Visible:set(false)
+        if utf8.len(Tool.ToolTip) >= 1 then
+          self.ToolTip.Text:set(Tool.ToolTip)
+          self.ToolTip.Visible:set(States.ToolTip.Enabled:get() and true)
+          if self.ToolTipProcess then
+            task.cancel(self.ToolTipProcess)
+          end
+          self.ToolTipProcess = task.delay(2, function()
+            self.ToolTip.Visible:set(false)
+          end)
+        else
+          self.ToolTip.Visible:set(false)
+        end
       end
     end
   end
@@ -135,11 +178,11 @@ function States:_ToolRemoved(Tool: Tool)
   local ToolNum = self:_FindToolSlot(Tool)
   local ToolSlot = NewToolSlots[ToolNum]
   if ToolSlot then
-    if Tool.Parent ~= self.Backpack and Tool.Parent ~= self.Char then
+    if Tool.Parent ~= self.Backpack and Tool.Parent ~= self.Character then
       table.remove(NewToolSlots, ToolNum)
       self.ToolTip.Visible:set(false)
     else
-      ToolSlot.Equipped:set(Tool.Parent == self.Char)
+      ToolSlot.Equipped:set(Tool.Parent == self.Character)
     end
     self.ToolSlots:set(NewToolSlots)
   end
@@ -154,16 +197,16 @@ end
 function States:_CharacterAdded(NewChar: Model)
   self.ToolSlots:set({})
   
-  self.Char = NewChar
-  self.Humanoid = self.Char:WaitForChild("Humanoid")
+  self.Character = NewChar
+  self.Humanoid = self.Character:WaitForChild("Humanoid")
 
-  self.Char.ChildAdded:Connect(function(Tool)
+  self.Character.ChildAdded:Connect(function(Tool)
     self:_ToolAdded(Tool)
   end)
-  self.Char.ChildRemoved:Connect(function(Tool)
+  self.Character.ChildRemoved:Connect(function(Tool)
     self:_ToolRemoved(Tool)
   end)
-  self:_ScanToolDir(self.Char)
+  self:_ScanToolDir(self.Character)
 
   self.Backpack = Players.LocalPlayer:WaitForChild("Backpack")
   self.Backpack.ChildAdded:Connect(function(Tool)
@@ -173,6 +216,11 @@ function States:_CharacterAdded(NewChar: Model)
     self:_ToolRemoved(Tool)
   end)
   self:_ScanToolDir(self.Backpack)
+end
+
+function States:_UpdateGamepadInUse(Input: InputObject)
+  local Gamepads = {Enum.UserInputType.Gamepad1, Enum.UserInputType.Gamepad2, Enum.UserInputType.Gamepad3, Enum.UserInputType.Gamepad4, Enum.UserInputType.Gamepad5, Enum.UserInputType.Gamepad6, Enum.UserInputType.Gamepad7, Enum.UserInputType.Gamepad8}
+  States.GamepadInUse:set(table.find(Gamepads, Input.UserInputType) ~= nil)
 end
 
 function States:Start()
@@ -186,12 +234,22 @@ function States:Start()
     self:_CharacterAdded(ExistingCharacter)
   end
 
-  Observer(self.ManagementMode.Enabled):onChange(function()
-    if self.ManagementMode.Enabled:get() then
+  Observer(self.ManagementMode.Active):onChange(function()
+    if self.ManagementMode.Active:get() then
       if self.Humanoid then
         self.Humanoid:UnequipTools()
       end
+    else
+      States.ManagementMode.Swapping.PrimarySlot:set(nil)
+      States.ManagementMode.Swapping.SecondarySlot:set(nil)
     end
+  end)
+  
+  UserInputService.InputChanged:Connect(function(Input: InputObject)
+    self:_UpdateGamepadInUse(Input)
+  end)
+  UserInputService.InputEnded:Connect(function(Input: InputObject)
+    self:_UpdateGamepadInUse(Input)
   end)
 end
 

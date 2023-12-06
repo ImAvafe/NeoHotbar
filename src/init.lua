@@ -1,9 +1,9 @@
-local GuiService = game:GetService("GuiService")
+local CollectionService = game:GetService("CollectionService")
+local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
-local VRService = game:GetService("VRService")
 
 local States = require(script.States)
 local HotbarGui = require(script.Components.Hotbar)
@@ -15,7 +15,7 @@ if not RunService:IsStudio() then
 end
 
 --[=[
-  @class NeoHotbar
+	@class NeoHotbar
 ]=]
 local NeoHotbar = {
 	Started = false,
@@ -23,7 +23,7 @@ local NeoHotbar = {
 }
 
 --[=[
-  Initializes NeoHotbar and deploys its UI with default settings.
+	Initializes NeoHotbar and deploys its UI with default settings.
 ]=]
 function NeoHotbar:Start()
 	if self.Started then
@@ -51,9 +51,11 @@ function NeoHotbar:Start()
 				if ToolSlot then
 					States:ToggleToolEquipped(ToolSlot.Tool:get())
 				end
-				States.ManagementMode.Enabled:set(false)
+				States.ManagementMode.Active:set(false)
 			elseif Input.KeyCode == Enum.KeyCode.Backquote then
-				States.ManagementMode.Enabled:set(not States.ManagementMode.Enabled:get())
+				if States.ManagementMode.Enabled:get() then
+					States.ManagementMode.Active:set(not States.ManagementMode.Active:get())
+				end
 			end
 		elseif Input.UserInputType == Enum.UserInputType.Gamepad1 then
 			local EquippedToolSlot, EquippedToolSlotIndex = States:GetEquippedToolSlot()
@@ -71,9 +73,6 @@ function NeoHotbar:Start()
 			if EquippedToolSlot then
 				local ToolSlotIndex = EquippedToolSlotIndex + GAMEPAD_SELECTOR_INDEXERS[SelectorDirection]
 				ToolSlot = ToolSlots[ToolSlotIndex]
-				print(EquippedToolSlotIndex)
-				-- print(ToolSlot, ToolSlotIndex)
-				-- print(ToolSlots)
 				ToolSlot = ToolSlot or EquippedToolSlot -- Set equipped tool to be unequipped if reached end
 			else
 				if not ToolSlot then -- For default / wrapover selection based on direction
@@ -86,22 +85,21 @@ function NeoHotbar:Start()
 			end
 
 			States:ToggleToolEquipped(ToolSlot.Tool:get())
-			States.ManagementMode.Enabled:set(false)
-		elseif
-			Input.UserInputType == Enum.UserInputType.MouseButton1
-			or Input.UserInputType == Enum.UserInputType.Touch
-		then
+			States.ManagementMode.Active:set(false)
+		elseif (Input.UserInputType == Enum.UserInputType.MouseButton1) or (Input.UserInputType == Enum.UserInputType.Touch) then
 			local InteractedGuiObjects = Players.LocalPlayer.PlayerGui:GetGuiObjectsAtPosition(Input.Position.X, Input.Position.Y)
 			
 			local GuiWithinToolSlots
 			for _, GuiObject in ipairs(InteractedGuiObjects) do
-				if GuiObject:FindFirstAncestor("Hotbar") then
+				local NeoHotbarAncestor = GuiObject:FindFirstAncestor("NeoHotbar")
+				if NeoHotbarAncestor == self._HotbarGui then
 					GuiWithinToolSlots = true
+					break
 				end
 			end
 
 			if not GuiWithinToolSlots then
-				States.ManagementMode.Enabled:set(false)
+				States.ManagementMode.Active:set(false)
 				States.ContextMenu.Active:set(false)
 			end
 		end
@@ -109,9 +107,9 @@ function NeoHotbar:Start()
 end
 
 --[=[
-  Sets whether NeoHotbar is enabled or not. Disabling hides the hotbar and turns off functionality.
+	Sets whether NeoHotbar or not is enabled. Disabling hides the hotbar and turns off keybinds.
 
-  @param Enabled -- Whether or not to enable NeoHotbar.
+	@param Enabled -- Whether or not to enable NeoHotbar.
 ]=]
 function NeoHotbar:SetEnabled(Enabled: boolean)
 	if typeof(Enabled) ~= "boolean" then return end
@@ -122,12 +120,64 @@ function NeoHotbar:SetEnabled(Enabled: boolean)
 	end
 
 	States.Enabled:set(Enabled)
+
+	States.ManagementMode.Active:set(false)
+	States.ContextMenu.Active:set(false)
 end
 
 --[=[
-  Overrides NeoHotbar's UI with a new set of Gui objects.
+	Sets whether or not ToolTips are enabled.
 
-  @param CustomGuiSet -- The parent folder containing your custom Gui objects.
+	@param Enabled -- Whether or not to enable.
+]=]
+function NeoHotbar:SetToolTipsEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if ToolTips are enabled or not.")
+		return
+	end
+
+	States.ToolTip.Enabled:set(Enabled)
+end
+
+--[=[
+	Sets whether or not players can rearrange the tools in their hotbar.
+
+	@param Enabled -- Whether or not to enable.
+]=]
+function NeoHotbar:SetManagementEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if hotbar management is enabled.")
+		return
+	end
+
+	States.ManagementMode.Enabled:set(Enabled)
+end
+
+--[=[
+	Sets whether or not players can open the context menu. *(the one that appears when you right click on a tool)*
+
+	@param Enabled -- Whether or not to enable.
+]=]
+function NeoHotbar:SetContextMenuEnabled(Enabled: boolean)
+	if typeof(Enabled) ~= "boolean" then return end
+
+	if not self.Started then
+		warn("NeoHotbar needs to be started before you can change if the context menu is enabled or not.")
+		return
+	end
+
+	States.ContextMenu.Enabled:set(Enabled)
+end
+
+--[=[
+	Overrides NeoHotbar's UI with a new set of Gui objects.
+
+	@param CustomGuiSet -- The parent folder containing your custom Gui objects.
+	@param DefaultEffectsEnabled -- Whether or not to enable NeoHotbar's built-in UI effects. Not compatible with ultra-customized themes.
 ]=]
 function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: boolean?)
 	if typeof(CustomGuiSet) ~= "Instance" then return end
@@ -148,7 +198,7 @@ function NeoHotbar:OverrideGui(CustomGuiSet: Folder, DefaultEffectsEnabled: bool
 end
 
 --[=[
-  Reset NeoHotbar's UI back to the default.
+	Reset NeoHotbar's UI back to the default.
 ]=]
 function NeoHotbar:ResetGui()
 	if not self.Started then
@@ -163,13 +213,14 @@ function NeoHotbar:ResetGui()
 end
 
 --[=[
-  Adds a custom button to the hotbar, prepended to the left-most side.
+	Adds a custom button to the hotbar, prepended to the left-most side.
 
-  @param ButtonName string -- The name/identifier of the button to be added.
-  @param IconImage string -- The image URI to be used on the button icon. E.g. "rbxassetid://".
-  @param Callback function -- The function called upon button activation (click/touch/etc).
+	@param ButtonName -- The name/identifier of the button to be added.
+	@param IconImage -- The image URI to be used on the button icon. E.g. "rbxassetid://".
+	@param Callback -- The function called upon button activation (click/touch/etc).
+	@param GamepadKeybind -- A gamepad keycode to trigger your custom button.
 ]=]
-function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any)
+function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callback: any, GamepadKeybind: EnumItem?)
 	if typeof(ButtonName) ~= "string" then return end
 	if typeof(IconImage) ~= "string" then return end
 
@@ -183,14 +234,23 @@ function NeoHotbar:AddCustomButton(ButtonName: string, IconImage: string, Callba
 		Name = ButtonName,
 		Icon = IconImage,
 		Callback = Callback,
+		GamepadKeybind = GamepadKeybind,
 	})
 	States.CustomButtons:set(CustomButtons)
+
+	if GamepadKeybind then
+		ContextActionService:BindAction(`NeoHotbar_{ButtonName}`, function(_, InputState: EnumItem)
+			if InputState == Enum.UserInputState.End then
+				Callback()
+			end
+		end, false, GamepadKeybind)
+	end
 end
 
 --[=[
-  Removes the specified custom button from the hotbar.
+	Removes the specified custom button from the hotbar.
 
-  @param ButtonName string -- The name of the button to be removed.
+	@param ButtonName -- The name of the button to be removed.
 ]=]
 function NeoHotbar:RemoveCustomButton(ButtonName: string)
 	if typeof(ButtonName) ~= "string" then return end
@@ -206,12 +266,16 @@ function NeoHotbar:RemoveCustomButton(ButtonName: string)
 	local CustomButtons = States.CustomButtons:get()
 	table.remove(CustomButtons, table.find(CustomButtons, CustomButton))
 	States.CustomButtons:set(CustomButtons)
+
+	if CustomButton.GamepadKeybind then
+		ContextActionService:UnbindAction(`NeoHotbar_{ButtonName}`)
+	end
 end
 
 --[=[
-  Returns the specified custom button if found.
+	Returns the specified custom button if found.
 
-  @param ButtonName string -- The name of the button to be searched for.
+	@param ButtonName -- The name of the button to be searched for.
 ]=]
 function NeoHotbar:FindCustomButton(ButtonName: string)
 	if typeof(ButtonName) ~= "string" then return end
@@ -220,9 +284,9 @@ function NeoHotbar:FindCustomButton(ButtonName: string)
 end
 
 --[=[
-  @private
+	@private
 
-  Creates/updates NeoHotbar's UI. To be used internally.
+	Builds NeoHotbar's UI. Only intended for internal use.
 ]=]
 function NeoHotbar:_CreateGui()
 	self._HotbarGui = HotbarGui({

@@ -11,7 +11,7 @@ local Child = FusionUtils.Child
 return function(Props: table)
 	Props.Image = EnsureProp(Props.Image, "string", "")
 
-	return Hydrate(States.InstanceSet:get().ButtonImage:Clone()) {
+	return Hydrate(States.InstanceSet:get()[script.Name]:Clone()) {
 		[Child "Image"] = {
 			Image = Props.Image
 		}

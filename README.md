@@ -1,9 +1,11 @@
 <p align="center">
+  <a href="https://avafe.me/NeoHotbar">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="/gh-assets/NeoHotbarLogoLight.svg"></source>
       <source media="(prefers-color-scheme: light)" srcset="/gh-assets/NeoHotbarLogoDark.svg"></source>
-      <img alt="NeoHotbar" src="/gh-assets/NeoHotbarLogoLight.svg" width="350" height="70"></img>
+      <img alt="NeoHotbar" src="/gh-assets/NeoHotbarLogoLight.svg" height="65"></img>
     </picture>
+  </a>
 </p>
 
 <p align="center">
@@ -26,6 +28,7 @@
 - Full UI overriding
 - Custom buttons
 - Functional properties
+- Feature parity
 
 ## [Documentation 📄](https://avafe.me/NeoHotbar/docs/intro)
 

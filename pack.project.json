@@ -1,0 +1,12 @@
+{
+  "name": "NeoHotbar",
+  "tree": {
+    "$path": "Include/Linking.lua",
+    "Packages": {
+      "$path": "Packages",
+      "NeoHotbar": {
+          "$path": "lib"
+      }        
+    }
+  }
+}

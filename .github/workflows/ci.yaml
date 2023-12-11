@@ -13,13 +13,13 @@ jobs:
       - name: Checkout Main
         uses: actions/checkout@v3
 
-      - name: Setup Foreman
-        uses: Roblox/setup-foreman@v1
+      - name: Setup Aftman
+        uses: ok-nick/setup-aftman@v0
         with: 
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Foreman Toolchains
-        run: foreman install
+      - name: Install Aftman Toolchains
+        run: aftman install
 
       - name: Install Dependencies
         run: wally install
@@ -72,13 +72,13 @@ jobs:
       - name: Checkout development
         uses: actions/checkout@v3
 
-      - name: Setup Foreman
-        uses: Roblox/setup-foreman@v1
+      - name: Setup Aftman
+        uses: ok-nick/setup-aftman@v0
         with: 
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Foreman Toolchains
-        run: foreman install
+      - name: Install Aftman Toolchains
+        run: aftman install
 
       - name: Run Selene
         run : selene src

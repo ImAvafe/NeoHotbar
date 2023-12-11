@@ -28,7 +28,7 @@ jobs:
         run: mkdir -p Packages
 
       - name: Run Selene
-        run : selene lib
+        run : selene src
 
       - name: Build pack.rbxm
         run: rojo build -o pack.rbxm pack.project.json
@@ -81,7 +81,7 @@ jobs:
         run: foreman install
 
       - name: Run Selene
-        run : selene lib
+        run : selene src
 
       - name: Install Dependencies
         run: wally install

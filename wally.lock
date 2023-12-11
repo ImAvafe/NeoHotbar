@@ -3,11 +3,6 @@
 registry = "test"
 
 [[package]]
-name = "avafe/neohotbar"
-version = "0.1.0"
-dependencies = [["Fusion", "elttob/fusion@0.2.0"], ["FusionUtils", "hexcede/fusion-utils@0.1.2"]]
-
-[[package]]
 name = "elttob/fusion"
 version = "0.2.0"
 dependencies = []
@@ -16,3 +11,8 @@ dependencies = []
 name = "hexcede/fusion-utils"
 version = "0.1.2"
 dependencies = [["Fusion", "elttob/fusion@0.2.0"]]
+
+[[package]]
+name = "imavafe/test-neohotbar"
+version = "0.1.1-test.1"
+dependencies = [["Fusion", "elttob/fusion@0.2.0"], ["FusionUtils", "hexcede/fusion-utils@0.1.2"]]

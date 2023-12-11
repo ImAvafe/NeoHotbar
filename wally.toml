@@ -1,8 +1,15 @@
 [package]
-name = "avafe/neohotbar"
-version = "0.1.0"
+name = "imavafe/test-neohotbar"
+description = "A modern, flexible hotbar for Roblox"
+version = "0.1.2-test"
+license = "MIT"
+authors = ["Avafe"]
+
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
+
+exclude = ["**"]
+include = ["src", "src/*", "default.project.json", "wally.lock", "wally.toml"]
 
 [dependencies]
 Fusion = "elttob/fusion@0.2.0"

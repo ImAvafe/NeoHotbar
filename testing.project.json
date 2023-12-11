@@ -1,0 +1,18 @@
+{
+  "name": "NeoHotbar testing",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "NeoHotbar": {
+        "$path": "Include/Linking.lua",
+        "Packages": {
+          "$path": "Packages",
+          "NeoHotbar": {
+              "$path": "src"
+          }        
+        }
+      }
+    }
+  }
+}

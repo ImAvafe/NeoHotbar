@@ -30,14 +30,14 @@ jobs:
       - name: Run Selene
         run : selene src
 
-      - name: Build pack.rbxm
-        run: rojo build -o pack.rbxm pack.project.json
+      - name: Build package rbxm
+        run: rojo build -o NeoHotbar.rbxm pack.project.json
 
-      - name: Upload pack.rbxm as build artifact
+      - name: Upload package rbxm as build artifact
         uses: actions/upload-artifact@v3
         with: 
           name: NeoHotbar
-          path: pack.rbxm
+          path: NeoHotbar.rbxm
 
       - name: Get Release from wally.toml
         uses: SebRollen/toml-action@v1.0.0
@@ -60,7 +60,7 @@ jobs:
         with: 
           name: ${{ steps.read_toml.outputs.value }}
           tag_name: ${{ steps.read_toml.outputs.value }}
-          files: pack.rbxm
+          files: NeoHotbar.rbxm
           generate_release_notes: true
           draft: true
 

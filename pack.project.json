@@ -5,7 +5,7 @@
     "Packages": {
       "$path": "Packages",
       "NeoHotbar": {
-          "$path": "lib"
+          "$path": "src"
       }        
     }
   }

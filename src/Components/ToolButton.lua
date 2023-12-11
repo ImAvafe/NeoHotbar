@@ -15,7 +15,6 @@ local OnEvent = Fusion.OnEvent
 local Hydrate = Fusion.Hydrate
 local Child = FusionUtils.Child
 local Value = Fusion.Value
-local Cleanup = Fusion.Cleanup
 local New = Fusion.New
 local Observer = Fusion.Observer
 local Cleanup = Fusion.Cleanup
@@ -46,6 +45,7 @@ UserInputService.InputEnded:Connect(function(Input: InputObject)
 		if States.ManagementMode.Swapping.PrimarySlot:get() and States.ManagementMode.Swapping.SecondarySlot:get() then
 			States:SwapToolSlots(States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"), States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber"))
 		end
+		States.ManagementMode.Swapping.PrimarySlot:set(nil)
 		States.ManagementMode.Swapping.SecondarySlot:set(nil)
 	end
 end)
@@ -78,12 +78,7 @@ return function(Props: table)
 		LayoutOrder = Props.LayoutOrder,
 
 		[OnEvent "Activated"] = function()
-			if not States.ManagementMode.Active:get() then
-				States:ToggleToolEquipped(Props.Tool:get())
-			else
-				print(1)
-				States.ContextMenu.Active:set(false)
-
+			if States.ManagementMode.Active:get() then
 				local SwappedTool = false
 				if GuiService.SelectedObject == ToolButton then
 					if States.ManagementMode.Swapping.PrimarySlot:get() then
@@ -98,9 +93,13 @@ return function(Props: table)
 					end
 				end
 
-				if not SwappedTool then
-					States:SetContextMenuToSlot(ToolButton, Props.Tool:get())
+				if SwappedTool then
+					States.ContextMenu.Active:set(false)
+				else
+					States:ToggleContextMenuToSlot(ToolButton, Props.Tool:get())
 				end
+			else
+				States:ToggleToolEquipped(Props.Tool:get())
 			end
 		end,
 		[OnEvent "MouseButton2Click"] = function()
@@ -143,6 +142,10 @@ return function(Props: table)
 		end,
 		[OnEvent "MouseButton1Up"] = function()
 			Holding:set(false)
+
+			if States.ManagementMode.Swapping.PrimarySlot:get() == ToolButton then
+				States.ManagementMode.Swapping.PrimarySlot:set(nil)
+			end
 
 			if MouseMoveConnection then
 				MouseMoveConnection:Disconnect()
@@ -212,6 +215,7 @@ return function(Props: table)
 
 				local IsPrimarySwapSlot = PrimarySlot and (PrimarySlot == ToolButton)
 				local IsSecondarySwapSlot = SecondarySlot and (SecondarySlot == ToolButton)
+				
 				if Holding:get() or (IsPrimarySwapSlot or IsSecondarySwapSlot) then
 					return Color3.fromRGB(41, 44, 48)
 				else

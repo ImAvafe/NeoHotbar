@@ -10,7 +10,7 @@ NeoHotbar is a modern, flexible hotbar for Roblox. It aims to provide an instant
 
 ### Roblox Studio
 
-1. Get [NeoHotbar](https://example.com) from the toolbox.
+1. Get [NeoHotbar](https://create.roblox.com/marketplace/asset/15617827028) from the toolbox.
 2. Place the loader into `StarterPlayer/StarterPlayerScripts`
 3. *If you want to use the API, you can take the module out of the loader script.*
 

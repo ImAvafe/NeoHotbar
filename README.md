@@ -19,21 +19,25 @@
 
 ---
 
-## [Installation 📦](https://avafe.me/NeoHotbar/docs/intro/#installation)
+## [📦Installation](https://avafe.me/NeoHotbar/docs/intro/#installation)
 
-## Features
+## [📄 Documentation](https://avafe.me/NeoHotbar/)
+
+## [🎮 Live Demo](https://roblox.com/games/12259231211)
+
+## ✨ Features
 
 - Modern design
 - Proper mobile, console and VR support
-- Full UI overriding
 - Custom buttons
+- Full UI overriding
 - Functional properties
 - Feature parity
 
-## [Documentation 📄](https://avafe.me/NeoHotbar/docs/intro)
+## ❤️ Support
 
-For info on customization, API and more, visit the [documentation site](https://avafe.me/NeoHotbar/docs/intro).
+If you find this resource useful, consider checking out my other stuff:
 
-## [Live Demo 🎮](https://roblox.com/games/12259231211)
+<a href="https://avafe.me/"><img src="gh-assets/WebsiteButton.png" height="50"></img></a>
 
-A live testing place is available at [NeoHotbar Demo](https://roblox.com/games/12259231211).
+<a href="https://avafe.me/discord"><img src="gh-assets/DiscordServerButton.png" height="50"></img></a>

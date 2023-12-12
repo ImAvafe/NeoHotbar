@@ -22,12 +22,33 @@ You can add your own custom buttons to NeoHotbar, like to open a backpack for ex
 
 ## Custom UI
 
-NeoHotbar's UI is fully overridable, so you can customize it however you like! You can also plug into dynamic attributes like `Equipped` to have your UI react to changes.
+NeoHotbar's UI is fully overridable, so you can customize it however you like! 
 
 1. Copy over the default UI to use as a template. The folder can be found in `NeoHotbar/DefaultInstances`.
 2. Modify all you like, you have full control!
 3. Call [:OverrideGui()](/api/NeoHotbar#OverrideGui) on NeoHotbar, passing your folder as an argument.
 
+### Dynamic attributes
+
+You can also plug into dynamic attributes to have your UI react to changes.
+
+For example, the `ToolButton` component has an attribute called `Equipped`. Here's what a code snippet for that might look like:
+
+```lua
+local ToolButton = path.to.ToolButton
+
+local function ReactToEquipped(Equipped: boolean)
+    print(`Equipped: {Equipped}`)
+end
+
+ToolButton:GetAttributeChangedSignal("Equipped"):Connect(function()
+    ReactToEquipped(ToolButton:GetAttribute("Equipped"))
+end)
+
+ReactToEquipped(ToolButton:GetAttribute("Equipped"))
+```
+
+You may also choose to use a UI library like [Fusion](https://elttob.uk/Fusion/0.2/) to handle reactive logic. Fun fact, NeoHotbar uses Fusion behind the scenes itself.
 
 ## Properties
 

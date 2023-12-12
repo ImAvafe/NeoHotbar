@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[428],{63891:e=>{e.exports=JSON.parse('{"sourceUrl":"https://github.com/ImAvafe/NeoHotbar/blob/master","baseUrl":"/NeoHotbar/","classOrder":[],"apiCategories":[]}')}}]);

@@ -3,7 +3,6 @@ title = "NeoHotbar"
 tagline = "A modern, flexible hotbar for Roblox"
 url = "https://avafe.me"
 favicon = "/img/favicon.svg"
-gitSourceBranch = "main"
 
 [home]
 enabled = true

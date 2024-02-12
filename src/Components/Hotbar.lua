@@ -33,26 +33,28 @@ return function(Props: table)
 					end),
 
 					[Children] = ForPairs(States.CustomButtons, function(ButtonNum, ButtonEntry)
-						return ButtonNum, CustomButton {
-							Icon = ButtonEntry.Icon,
-							Callback = ButtonEntry.Callback,
-							LayoutOrder = ButtonEntry,
-							GamepadKeybind = ButtonEntry.GamepadKeybind,
-						}
+						return ButtonNum,
+							CustomButton {
+								Icon = ButtonEntry.Icon,
+								Callback = ButtonEntry.Callback,
+								LayoutOrder = ButtonEntry.LayoutOrder,
+								GamepadKeybind = ButtonEntry.GamepadKeybind,
+							}
 					end, Fusion.cleanup),
 				},
 				[Child "ToolSlots"] = {
 					[Children] = ForPairs(States.ToolSlots, function(ToolNum, ToolSlot)
-						return ToolNum, ToolButton {
-							Tool = ToolSlot.Tool,
-							Equipped = ToolSlot.Equipped,
-							ToolNumber = ToolNum,
-							LayoutOrder = ToolNum,
-						}
+						return ToolNum,
+							ToolButton {
+								Tool = ToolSlot.Tool,
+								Equipped = ToolSlot.Equipped,
+								ToolNumber = ToolNum,
+								LayoutOrder = ToolNum,
+							}
 					end, Fusion.cleanup),
 				},
 			},
-			
+
 			[Children] = {
 				ToolTip {},
 			},
@@ -89,10 +91,10 @@ return function(Props: table)
 							local CustomButtons = States.CustomButtons:get()
 							local OffsetPadding = ((#ToolSlots >= 1 and #CustomButtons >= 1) and 10) or 0
 							return UDim.new(0, OffsetPadding)
-						end)
+						end),
 					},
 				},
-			}
+			},
 		}
 	end
 

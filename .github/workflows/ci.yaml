@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout Main
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Aftman
         uses: ok-nick/setup-aftman@v0.4.2
@@ -32,7 +32,7 @@ jobs:
         run: rojo build -o NeoHotbar.rbxm pack.project.json
 
       - name: Upload package rbxm as build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NeoHotbar
           path: NeoHotbar.rbxm
@@ -67,7 +67,7 @@ jobs:
 
     steps:
       - name: Checkout development
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Aftman
         uses: ok-nick/setup-aftman@v0.4.2
@@ -90,7 +90,7 @@ jobs:
         run: rojo build -o test-pack.rbxm pack.project.json
 
       - name: Upload test-pack.rbxm as build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: NeoHotbar
           path: test-pack.rbxm

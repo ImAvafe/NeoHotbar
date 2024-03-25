@@ -43,7 +43,10 @@ UserInputService.InputEnded:Connect(function(Input: InputObject)
 		end
 
 		if States.ManagementMode.Swapping.PrimarySlot:get() and States.ManagementMode.Swapping.SecondarySlot:get() then
-			States:SwapToolSlots(States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"), States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber"))
+			States:SwapToolSlots(
+				States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"),
+				States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber")
+			)
 		end
 		States.ManagementMode.Swapping.PrimarySlot:set(nil)
 		States.ManagementMode.Swapping.SecondarySlot:set(nil)
@@ -83,7 +86,10 @@ return function(Props: table)
 				if GuiService.SelectedObject == ToolButton then
 					if States.ManagementMode.Swapping.PrimarySlot:get() then
 						States.ManagementMode.Swapping.SecondarySlot:set(ToolButton)
-						States:SwapToolSlots(States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"), States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber"))
+						States:SwapToolSlots(
+							States.ManagementMode.Swapping.PrimarySlot:get():GetAttribute("SlotNumber"),
+							States.ManagementMode.Swapping.SecondarySlot:get():GetAttribute("SlotNumber")
+						)
 
 						States.ManagementMode.Swapping.PrimarySlot:set()
 						States.ManagementMode.Swapping.SecondarySlot:set()
@@ -121,7 +127,9 @@ return function(Props: table)
 							States.ToolTip.Visible:set(false)
 							States.ContextMenu.Active:set(false)
 
-							if (not States.ManagementMode.Active:get()) and (GuiService.SelectedObject == ToolButton) then
+							if
+								(not States.ManagementMode.Active:get()) and (GuiService.SelectedObject == ToolButton)
+							then
 								GuiService.SelectedObject = nil
 							end
 						end
@@ -204,7 +212,7 @@ return function(Props: table)
 					return {}
 				end
 			end, Fusion.cleanup),
-		}
+		},
 	}
 
 	if States.DefaultEffectsEnabled:get() then
@@ -215,11 +223,11 @@ return function(Props: table)
 
 				local IsPrimarySwapSlot = PrimarySlot and (PrimarySlot == ToolButton)
 				local IsSecondarySwapSlot = SecondarySlot and (SecondarySlot == ToolButton)
-				
+
 				if Holding:get() or (IsPrimarySwapSlot or IsSecondarySwapSlot) then
-					return Color3.fromRGB(41, 44, 48)
+					return Color3.fromRGB(20, 20, 20)
 				else
-					return Color3.fromRGB(25, 27, 29)
+					return Color3.fromRGB(0, 0, 0)
 				end
 			end),
 
@@ -229,10 +237,13 @@ return function(Props: table)
 		})
 	end
 
-	table.insert(ObserverDisconnects, Observer(Holding):onChange(function()
-		ToolButton:SetAttribute("Holding", Holding:get())
-	end))
-	ToolButton:SetAttribute("Holding", Holding:get()) 
+	table.insert(
+		ObserverDisconnects,
+		Observer(Holding):onChange(function()
+			ToolButton:SetAttribute("Holding", Holding:get())
+		end)
+	)
+	ToolButton:SetAttribute("Holding", Holding:get())
 	ToolButton:SetAttribute("Equipped", Props.Equipped:get())
 	ToolButton:SetAttribute("SlotNumber", Props.ToolNumber:get())
 	New "ObjectValue" {

@@ -13,8 +13,11 @@
 </p>
 
 <p align="center">
-  <img title="PC, Mobile, Console & VR" alt="Platforms" src="https://img.shields.io/badge/compatibility-💻_📱_🎮_🥽-2ea44f"></img>
+  <a href="https://github.com/imavafe/neohotbar/actions"><img src="https://img.shields.io/github/actions/workflow/status/imavafe/neohotbar/ci.yaml?branch=main" alt="Build Status"></a>
   <img title="MIT licensed" alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
+  <a href="https://discord.gg/fyeYey62Dm">
+    <img title="Discord" alt="Discord" src="https://img.shields.io/discord/1170503082719846521?color=5865F2&label=discord&logo=discord&logoColor=white"/>
+  </a>
 </p>
 
 ---

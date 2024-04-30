@@ -1,8 +1,4 @@
 <p align="center">
-  <a href="https://discord.gg/fyeYey62Dm"><img src="https://dcbadge.vercel.app/api/server/fyeYey62Dm"></img></a>
-</p>
-
-<p align="center">
   <a href="https://avafe.me/NeoHotbar">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="/gh-assets/NeoHotbarLogoLight.svg"></source>
@@ -21,6 +17,10 @@
   <img title="MIT licensed" alt="License" src="https://img.shields.io/github/license/ImAvafe/NeoHotbar"></img>
 </p>
 
+<p align="center">
+  <a href="https://discord.gg/fyeYey62Dm"><img src="https://dcbadge.vercel.app/api/server/fyeYey62Dm"></img></a>
+</p>
+
 ---
 
 ## [📦Installation](https://avafe.me/NeoHotbar/docs/intro/#installation)
@@ -31,17 +31,11 @@
 
 ## ✨ Features
 
-- Modern design
-- Proper mobile, console and VR support
-- Custom buttons
-- Full UI overriding
-- Functional properties
-- Feature parity
+- Modern design ✨
+- Custom buttons 👆
+- Full UI overriding 🔁
+- Supports all devices 📱
 
-## ❤️ Support
+##
 
-If you find this resource useful, consider checking out my other stuff:
-
-<a href="https://avafe.me/"><img src="gh-assets/WebsiteButton.png" height="50"></img></a>
-
-<a href="https://avafe.me/discord"><img src="gh-assets/DiscordServerButton.png" height="50"></img></a>
+[![By Avafe](/gh-assets/watermark.svg)](https://avafe.me)
